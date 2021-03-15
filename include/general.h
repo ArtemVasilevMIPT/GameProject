@@ -9,7 +9,7 @@ private:
     int borderWidth = 40;
     sf::RenderWindow* window;
 public:
-    Player(sf::RenderWindow& wind)
+    explicit Player(sf::RenderWindow& wind)
     {
         window = &wind;
         this->AddComponent(CameraComponent(wind));

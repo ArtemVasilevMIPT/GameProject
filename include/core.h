@@ -6,6 +6,8 @@
 #include <string>
 #include <unordered_map>
 #include <typeinfo>
+#include <list>
+
 
 class Component
 {
@@ -26,6 +28,8 @@ public:
     Object();
     Object(const Object& obj);
     ~Object();
+
+    std::list<Object*>::iterator _objPos; //Position in scene's object storage
 
     virtual void OnStart() = 0; //Called when game starts
     virtual void OnTick() = 0; //Called every tick
@@ -73,3 +77,20 @@ class Builder
 {
 
 };
+
+class Scene
+{
+private:
+    std::list<Object*> objects;
+
+public:
+    Scene() = default;
+    Scene(std::string path);
+    ~Scene() = default;
+
+    void load(std::string path);
+    void addObject(Object* obj);
+    void removeObject(std::list<Object*>::iterator pos);
+};
+
+Scene currentScene;
