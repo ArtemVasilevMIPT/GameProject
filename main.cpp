@@ -1,6 +1,9 @@
 #include <iostream>
-#include "include/core.h"
-#include "include/graphics.h"
+#include "core.h"
+#include "graphics.h"
+#include "general.h"
+#include "gui.h"
+
 
 class TestObject : public Object
 {

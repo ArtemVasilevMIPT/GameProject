@@ -30,3 +30,24 @@ Object::Object(const Object &obj)
 
 Component::Component() = default;
 Component::~Component() = default;
+
+Scene::Scene(std::string path)
+{
+
+}
+
+void Scene::load(std::string path)
+{
+
+}
+
+void Scene::addObject(Object *obj)
+{
+    objects.push_back(obj);
+    obj->_objPos = objects.end()--;
+}
+
+void Scene::removeObject(std::list<Object*>::iterator pos)
+{
+    objects.erase(pos);
+}
