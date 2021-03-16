@@ -93,4 +93,4 @@ public:
     void removeObject(std::list<Object*>::iterator pos);
 };
 
-Scene currentScene;
+//Scene currentScene;

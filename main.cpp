@@ -4,26 +4,16 @@
 #include "general.h"
 #include "gui.h"
 
-
-class TestObject : public Object
-{
-public:
-    void OnStart() override
-    {}
-    void OnTick() override
-    {}
-};
-
-
 int main()
 {
     //For testing only
-    TestObject obj;
-    obj.AddComponent(SpriteComponent("../data/textures/avatar.jpg"));
-    sf::Sprite sp = obj.GetComponent<SpriteComponent>()->GetSprite();
     sf::RenderWindow window(sf::VideoMode(800, 600), "My Window");
-    obj.AddComponent(CameraComponent(window));
-
+    Player pl(window);
+    sf::Texture t;
+    t.loadFromFile("../data/textures/avatar.jpg");
+    sf::Sprite sp;
+    sp.setTexture(t);
+    sp.setPosition(400, 300);  
     while(window.isOpen())
     {
         sf::Event event;
@@ -35,9 +25,10 @@ int main()
 
             }
         }
+        pl.OnTick();
         window.clear();
-        //window.draw(sp);
-        window.setView(obj.GetComponent<CameraComponent>()->GetCamera().GetView());
+        window.draw(sp);
+        window.setView(pl.GetComponent<CameraComponent>()->GetCamera().GetView());
         window.display();
     }
     //
