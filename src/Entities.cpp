@@ -14,10 +14,17 @@ void Unit::destroy() {
 }
 
 
-void Building::Destroy() {
+void Building::destroy() {
 
 }
 
-void Factory::build() {
+void HQ::destroy() {
     
+}
+
+void Factory::build() {
+
+}
+void Factory::destroy() {
+
 }
