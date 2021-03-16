@@ -31,13 +31,15 @@ public:
     ~Building() = default;
 
 
-    void Destroy();
+    virtual void destroy();
 };
 
 class HQ : public Building {
 public: 
     HQ() = default;
     ~HQ() = default;
+
+    void destroy() override;
 };
 
 class Factory : public Building {
@@ -51,4 +53,5 @@ public:
     ~Factory() = default;
 
     void build();
-}
+    void destroy() override;
+};
