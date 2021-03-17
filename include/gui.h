@@ -3,15 +3,15 @@
 #include "core.h"
 #include "SFML/Graphics.hpp"
 
-class UIElement : public Object
+class UIElement
 {
 public:
+    sf::Vector2f position;//Position of top left corner
     UIElement() = default;
     virtual ~UIElement() = default;
 
     virtual void Draw(sf::RenderWindow& window){}
-    void OnStart() override{}
-    void OnTick() override{}
+    virtual void transform(sf::Transform& tr);
 };
 
 class Box : public UIElement
@@ -27,6 +27,7 @@ public:
     void setPosition(float x, float y);
     void resize(float x, float y);
     void Draw(sf::RenderWindow& window) override;
+    void transform(sf::Transform& tr) override;
 };
 
 template<typename FuncType>
@@ -38,7 +39,7 @@ public:
     Button(sf::Vector2f pos, sf::Vector2f size,FuncType& func);
     ~Button() override = default;
 
-    void OnClick() override;
+    void OnClick();
 };
 
 class TextBox : public Box
@@ -51,17 +52,36 @@ public:
     ~TextBox() override = default;
 
     void Draw(sf::RenderWindow& window) override;
+    void transform(sf::Transform& tr) override;
 };
 
 class Canvas
 {
 private:
     std::vector<UIElement*> ui;
+    std::string state = "STATIC";//STATIC - will be moved with the view
+                                 //DYNAMIC - will not be moves with the view
 public:
-    Canvas() = default;
+    sf::Vector2f topRightCorner;
+    size_t width;
+    size_t height;
+    sf::Vector2f anchorPoint;
+
+    Canvas();
     ~Canvas();
 
     void drawUI(sf::RenderWindow& window);
+
+    const std::string& getState()
+    {
+        return state;
+    }
+    void setState(const std::string& st)
+    {
+        state = st;
+    }
+
+    void transform(sf::Transform& tr);
 
     template<typename T>
     void addElement(T* element);
@@ -85,8 +105,16 @@ class UIComponent : public Component
 private:
     UI ui;
 public:
-    UIComponent(Canvas* canvas);
+    explicit UIComponent(Canvas* canvas);
     ~UIComponent() override  = default;
 
     void Draw(sf::RenderWindow& window);
 };
+
+/*
+class UIManager
+{
+private:
+    std::vector<
+};
+*/

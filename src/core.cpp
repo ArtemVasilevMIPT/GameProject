@@ -4,9 +4,11 @@
 
 #include "core.h"
 
+Scene* Object::currentScene;
+
 Object::~Object()
 {
-
+    currentScene->removeObject(_objPos);
     for(auto& component : components)
     {
         delete component.second;
@@ -14,22 +16,24 @@ Object::~Object()
 
 }
 
-Object::Object() {}
+Object::Object()
+{
+    currentScene->addObject(this);
+}
+
 void Object::OnClick() {}
 void Object::OnHover() {}
 
-Object::Object(const Object &obj)
-{
-    for(auto& component : this->components)
-    {
-        delete[] component.second;
-    }
-
-    this->components = obj.components;
-}
-
 Component::Component() = default;
 Component::~Component() = default;
+
+Scene::~Scene()
+{
+    while(!objects.empty())
+    {
+        delete *objects.begin();
+    }
+}
 
 Scene::Scene(std::string path)
 {
@@ -44,10 +48,26 @@ void Scene::load(std::string path)
 void Scene::addObject(Object *obj)
 {
     objects.push_back(obj);
-    obj->_objPos = objects.end()--;
+    auto it = objects.end();
+    --it;
+    obj->_objPos = it;
 }
 
-void Scene::removeObject(std::list<Object*>::iterator pos)
+void Scene::removeObject(std::list<Object *>::iterator &iter)
 {
-    objects.erase(pos);
+    objects.erase(iter);
 }
+
+void Map::load(std::string texturePath)
+{
+    mapTexture.loadFromFile(texturePath);
+    mapSprite.setTexture(mapTexture);
+}
+
+sf::Sprite Map::getSprite()
+{
+    sf::Sprite sp;
+    sp.setTexture(mapTexture);
+    return mapSprite;
+}
+

@@ -4,6 +4,7 @@ Box::Box(sf::Vector2f pos, sf::Vector2f size)
 {
     box.setSize(size);
     box.setPosition(pos.x, pos.y);
+    position = pos;
 }
 
 void Box::setColor(sf::Color c)
@@ -14,6 +15,7 @@ void Box::setColor(sf::Color c)
 void Box::setPosition(float x, float y)
 {
     box.setPosition(x, y);
+    position = sf::Vector2f(x, y);
 }
 
 void Box::resize(float x, float y)
@@ -24,6 +26,12 @@ void Box::resize(float x, float y)
 void Box::Draw(sf::RenderWindow &window)
 {
     window.draw(box);
+}
+
+void Box::transform(sf::Transform &tr)
+{
+    UIElement::transform(tr);
+    box.setPosition(position);
 }
 
 template<typename FuncType>
@@ -51,6 +59,12 @@ TextBox::TextBox(sf::Vector2f pos, sf::Vector2f size, std::string str) : Box(pos
     text.setPosition(pos.x, pos.y);
 }
 
+void TextBox::transform(sf::Transform &tr)
+{
+    Box::transform(tr);
+    text.setPosition(position);
+}
+
 
 Canvas::~Canvas()
 {
@@ -74,6 +88,25 @@ void Canvas::addElement(T *element)
     ui.push_back(dynamic_cast<UIElement*>(element));
 }
 
+Canvas::Canvas()
+{
+    topRightCorner.x = 0.0f;
+    topRightCorner.y = 0.0f;
+    width = 100;
+    height = 100;
+    anchorPoint.x = 50;
+    anchorPoint.y = 50;
+}
+
+void Canvas::transform(sf::Transform &tr)
+{
+    tr.transformPoint(topRightCorner);
+    tr.transformPoint(anchorPoint);
+    for(auto& uiElem : ui)
+    {
+        uiElem->transform(tr);
+    }
+}
 
 UI::~UI()
 {
@@ -98,4 +131,9 @@ UIComponent::UIComponent(Canvas* canvas)
 void UIComponent::Draw(sf::RenderWindow &window)
 {
     ui.Draw(window);
+}
+
+void UIElement::transform(sf::Transform &tr)
+{
+    tr.transformPoint(position);
 }
