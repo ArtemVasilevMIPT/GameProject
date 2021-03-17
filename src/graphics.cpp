@@ -29,6 +29,17 @@ sf::Sprite SpriteComponent::GetSprite() const
 {
     sf::Sprite sprite;
     sprite.setTexture(texture);
+    sprite.setPosition(spritePosition.first, spritePosition.second);
     return sprite;
 }
 
+void SpriteComponent::SetPosition(float x, float y)
+{
+    spritePosition.first = x;
+    spritePosition.second = y;
+}
+
+Camera::Camera(sf::RenderWindow &window)
+{
+    view = window.getDefaultView();
+}

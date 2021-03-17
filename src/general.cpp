@@ -32,3 +32,4 @@ void Player::OnTick()
     this->GetComponent<CameraComponent>()->moveCamera(offX, offY);
     //
 }
+

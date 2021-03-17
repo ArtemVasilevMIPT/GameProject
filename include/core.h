@@ -1,13 +1,30 @@
-//
-// Created by marcille on 06.03.2021.
-// Contains definitions of general classes
-//
 #pragma once
 #include <string>
 #include <unordered_map>
 #include <typeinfo>
 #include <list>
+#include "SFML/Graphics.hpp"
+#include "SFML/Window.hpp"
 
+class Object;
+
+class Scene
+{
+private:
+    std::list<Object*> objects;
+public:
+    Scene() = default;
+    Scene(std::string path);
+    ~Scene();
+
+    void load(std::string path);
+    void addObject(Object* obj);
+    void removeObject(std::list<Object*>::iterator& iter);
+    const std::list<Object*>& getObjects()
+    {
+        return objects;
+    }
+};
 
 class Component
 {
@@ -21,14 +38,16 @@ public :
 
 class Object
 {
+
 private:
     std::unordered_map<std::string,Component*> components; //Storage of all object's components
 
 public:
     Object();
-    Object(const Object& obj);
-    ~Object();
+    Object(const Object& obj) = delete;
+    virtual ~Object();
 
+    static Scene* currentScene;
     std::list<Object*>::iterator _objPos; //Position in scene's object storage
 
     virtual void OnStart() = 0; //Called when game starts
@@ -73,24 +92,25 @@ public:
     }
 };
 
-class Builder
-{
-
-};
-
-class Scene
+class Map
 {
 private:
-    std::list<Object*> objects;
-
+    sf::Texture mapTexture;
+    sf::Sprite mapSprite;
 public:
-    Scene() = default;
-    Scene(std::string path);
-    ~Scene() = default;
+    Map() = default;
+    void load(std::string texturePath);
+    sf::Sprite getSprite();
 
-    void load(std::string path);
-    void addObject(Object* obj);
-    void removeObject(std::list<Object*>::iterator pos);
+    sf::Texture& getTexture()
+    {
+        return mapTexture;
+    }
 };
 
-//Scene currentScene;
+class Builder
+{
+public:
+    virtual void build() = 0;
+    virtual void reset() = 0;
+};
