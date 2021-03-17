@@ -13,16 +13,19 @@ class SpriteComponent : public Component
 private:
     sf::Texture texture;
 public:
+    std::pair<float, float> spritePosition;
     SpriteComponent()
     {
         name = "SpriteComponent";
+        spritePosition = std::make_pair<float, float>(0.0f, 0.0f);
     }
     SpriteComponent(std::string texturePath);
     ~SpriteComponent() = default;
 
     //Sets new texture to an object
     void SetTexture(sf::Texture& tex);
-
+    //Sets position of a sprite on screen
+    void SetPosition(float x, float y);
     //Returns reference to an object's texture
     const sf::Texture& GetTexture() const;
     //Returns reference to an object's sprite
@@ -38,10 +41,8 @@ private:
 public:
     Camera() = delete;
     ~Camera() = default;
-    Camera(sf::RenderWindow& window)
-    {
-        view = window.getView();
-    }
+    Camera(sf::RenderWindow& window);
+
 
     const sf::View& GetView()
     {

@@ -9,13 +9,15 @@ public:
 
     std::string name;
     int hp;
-    std::pair<float, float> coordinaties;
-    std::string currentCommant;
+    std::pair<float, float> coordinates;
+    std::string currentCommand;
     std::list<std::pair<float, float>> currentPath;
 
     Unit() = default;
     ~Unit() = default;
 
+    void OnStart() override;
+    void OnTick() override;
     void move(std::pair<float, float> destPoint);
     void shoot(std::pair<float, float> destPoint);
     void destroy();    
@@ -30,7 +32,8 @@ public:
     Building() = default;
     ~Building() = default;
 
-
+    void OnStart() override;
+    void OnTick() override;
     virtual void destroy();
 };
 
@@ -52,6 +55,21 @@ public:
     Factory() = default;
     ~Factory() = default;
 
+    void OnStart() override;
+    void OnTick() override;
     void build();
     void destroy() override;
+};
+
+class TestUnitBuilder : Builder
+{
+private:
+    Unit* unit;
+public:
+    void build() override;
+    void reset() override;
+    Unit* getResult()
+    {
+        return unit;
+    }
 };
