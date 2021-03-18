@@ -3,7 +3,7 @@
 #include <cmath>
 #include <queue>
 #include "pathfinding.h"
-#include <iostream>
+#include <ctime>
 
 class Unit : public Object {
 public:
@@ -11,6 +11,11 @@ public:
     std::string name;
     int hp;
     std::pair<float, float> coordinates;
+    int damage;
+    float range;
+    float rate_of_fire;
+    Object* target;
+    size_t time_next_shot;
     float speed = 1.0f;
     std::string currentCommand = "STANDBY"; //Stores current command
 
@@ -27,7 +32,7 @@ public:
     void OnStart() override;
     void OnTick() override;
     void move(std::pair<float, float> destPoint);
-    void shoot(std::pair<float, float> destPoint);
+    void shoot(Object* target);
     void setCommand(std::string& command);
     void destroy();    
 };

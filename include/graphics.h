@@ -29,7 +29,9 @@ public:
     //Returns reference to an object's texture
     const sf::Texture& GetTexture() const;
     //Returns reference to an object's sprite
-    sf::Sprite GetSprite() const;
+    sf::Sprite GetSprite() const; 
+
+    std::pair<float, float> GetPosition();
 };
 
 //Camera object
