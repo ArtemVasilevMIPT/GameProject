@@ -71,6 +71,7 @@ std::queue<std::pair<float, float>> NavComponent::findPath(std::pair<float, floa
             while (map[x_next][y_next])*/
         }
     }
+<<<<<<< HEAD
     std::cout << "start: " << start.first << ' ' << start.second << '\n';
     std::cout << "finish: " << finish.first << ' ' << finish.second << '\n';
     std::queue<std::pair<float, float>> path1 = path;
@@ -78,5 +79,9 @@ std::queue<std::pair<float, float>> NavComponent::findPath(std::pair<float, floa
         std::cout << path1.front().first << ' ' << path1.front().second << '\n';
         path1.pop();
     }
+||||||| 68dc5fa
+=======
+
+>>>>>>> f854f9768582a214e3b325058537b6b926c557de
     return path;
 }

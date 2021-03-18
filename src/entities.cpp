@@ -29,7 +29,8 @@ void Unit::OnTick()
         }
         else
         {
-            std::pair<size_t, size_t> newPos = currentPath.front();
+            std::pair<float, float> newPos = currentPath.front();
+            //std::cerr << newPos.first << " " << newPos.second << std::endl;
             this->GetComponent<SpriteComponent>()->SetPosition(newPos.first, newPos.second);
             coordinates.first = newPos.first;
             coordinates.second = newPos.second;
