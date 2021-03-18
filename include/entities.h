@@ -1,8 +1,9 @@
 #pragma once
 #include "core.h"
 #include <cmath>
-#include <list>
 #include <queue>
+#include "pathfinding.h"
+#include <iostream>
 
 class Unit : public Object {
 public:
@@ -10,8 +11,15 @@ public:
     std::string name;
     int hp;
     std::pair<float, float> coordinates;
-    std::string currentCommand;
-    std::list<std::pair<float, float>> currentPath;
+    float speed = 1.0f;
+    std::string currentCommand = "STANDBY"; //Stores current command
+
+    //List of commands:
+    //* MOVE - unit is moving to its destination
+    //* SHOOT - unit shoots given target
+    //* STANDBY - unit does nothing
+
+    std::queue<std::pair<float, float>> currentPath;
 
     Unit() = default;
     ~Unit() = default;
@@ -20,6 +28,7 @@ public:
     void OnTick() override;
     void move(std::pair<float, float> destPoint);
     void shoot(std::pair<float, float> destPoint);
+    void setCommand(std::string& command);
     void destroy();    
 };
 
@@ -67,9 +76,7 @@ private:
     Unit* unit;
 public:
     void build() override;
+    void addNavigation(NavMesh& mesh);
     void reset() override;
-    Unit* getResult()
-    {
-        return unit;
-    }
+    Unit* getResult();
 };
