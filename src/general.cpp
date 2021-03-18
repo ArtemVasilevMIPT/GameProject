@@ -116,10 +116,12 @@ void Player::OnTick()
         if(selectedUnit != nullptr)
         {
             selectedUnit->selected = false;
+            std::cerr << "Deselected!" << std::endl;
         }
         if(clickedObject != nullptr)
         {
             selectedUnit = dynamic_cast<Entity*>(clickedObject);
+            std::cerr << "Selected!" << std::endl;
         }
         else
         {
