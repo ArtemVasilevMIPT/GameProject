@@ -13,7 +13,7 @@ private:
     //Pointer to the current window
     sf::RenderWindow* window;
 public:
-    Unit* selectedUnit = nullptr;
+    Entity* selectedUnit = nullptr;
     explicit Player(sf::RenderWindow& wind)
     {
         window = &wind;

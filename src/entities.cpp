@@ -1,7 +1,7 @@
 #include "entities.h"
 #include "graphics.h"
 #include "gui.h"
-
+#include <iostream>
 
 void Unit::move(std::pair<float, float> destPoint)
 {
@@ -10,7 +10,7 @@ void Unit::move(std::pair<float, float> destPoint)
     std::cerr << "Moving to coordinates: (" << destPoint.first << ", " << destPoint.second << ")" << std::endl;
 }
 
-void Unit::shoot(std::pair<float, float> destPoint) {
+void Unit::shoot(Entity* target) {
 
 }
 
@@ -51,11 +51,6 @@ void Unit::OnStart()
 {
 
 }
-
-void Unit::setCommand(std::string& command) {
-    currentCommand = command;
-}
-
 
 void Building::destroy() {
 
@@ -118,3 +113,23 @@ Unit *TestUnitBuilder::getResult()
 {
     return unit;
 }
+
+void Entity::OnStart()
+{}
+
+void Entity::OnTick()
+{}
+
+void Entity::shoot(Entity *target)
+{}
+
+void Entity::move(std::pair<float, float> destPoint)
+{}
+
+void Entity::setCommand(std::string &command)
+{
+    currentCommand = command;
+}
+
+void Entity::destroy()
+{}
