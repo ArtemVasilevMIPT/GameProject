@@ -53,5 +53,40 @@ void Player::OnTick()
         }
         rmbPressed = false;
     }
+
+    bool ePressed = false;
+    while(sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+    {
+        ePressed = true;
+    }
+    if(ePressed)
+    {
+        this->GetComponent<CameraComponent>()->zoomCamera(1.6f);
+        if(window->getView().getSize().x > windowSize.x)
+        {
+            sf::View v;
+            v.setSize(windowSize.x, windowSize.y);
+            v.setCenter(viewCenter);
+            this->GetComponent<CameraComponent>()->GetCamera().SetView(v);
+        }
+        ePressed = false;
+    }
+    bool qPressed = false;
+    while(sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+    {
+        qPressed = true;
+    }
+    if(qPressed)
+    {
+        this->GetComponent<CameraComponent>()->zoomCamera(0.0625f);
+        if(window->getView().getSize().x < 100)
+        {
+            sf::View v;
+            v.setSize(viewSize.x, viewSize.y);
+            v.setCenter(viewCenter);
+            this->GetComponent<CameraComponent>()->GetCamera().SetView(v);
+        }
+        qPressed = false;
+    }
 }
 
