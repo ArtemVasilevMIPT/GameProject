@@ -34,7 +34,7 @@ std::queue<std::pair<float, float>> NavComponent::findPath(std::pair<float, floa
 
     std::queue<std::pair<float, float>> path;
 
-    while(abs(xst - xend) >= EPSILON && abs(yst - yend) >= EPSILON) {
+    while(abs(xst - xend) >= EPSILON || abs(yst - yend) >= EPSILON) {
         float len = sqrt((xend - xst) * (xend - xst) + (yend - yst) * (yend - yst));
         if (len <= speed) {
             path.push({xend, yend});
@@ -69,5 +69,6 @@ std::queue<std::pair<float, float>> NavComponent::findPath(std::pair<float, floa
             while (map[x_next][y_next])*/
         }
     }
+
     return path;
 }
