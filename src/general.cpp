@@ -31,5 +31,27 @@ void Player::OnTick()
     }
     this->GetComponent<CameraComponent>()->moveCamera(offX, offY);
     //
+    //Handling events
+    bool rmbPressed = false;
+    while(sf::Mouse::isButtonPressed(sf::Mouse::Right))
+    {
+        rmbPressed = true;
+    }
+    if(rmbPressed)
+    {
+        if(selectedUnit != nullptr)
+        {
+            std::pair<float, float> dest = std::make_pair(cursorPosition.x, cursorPosition.y);
+            float scale = static_cast<float>(viewSize.x) / static_cast<float>(windowSize.x);
+            dest.first = viewCenter.x + (dest.first - windowSize.x / 2) * scale;
+            dest.second = viewCenter.y + (dest.second - windowSize.y / 2) * scale;
+            std::cerr << "Commanded movement to: (" << dest.first << ", " << dest.second << ")" << std::endl;
+            dest.first = std::max(dest.first, 0.0f);
+            dest.second = std::max(dest.second, 0.0f);
+
+            selectedUnit->move(dest);
+        }
+        rmbPressed = false;
+    }
 }
 

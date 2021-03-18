@@ -3,13 +3,8 @@
 #include "graphics.h"
 #include "general.h"
 #include "gui.h"
+#include "entities.h"
 
-class TestObject : public Object
-{
-public:
-    void OnTick() override {}
-    void OnStart() override {}
-};
 
 int main()
 {
@@ -18,12 +13,21 @@ int main()
     //For testing only
     sf::RenderWindow window(sf::VideoMode(800, 600), "My Window");
     Player pl(window);
-    TestObject to;
-    to.AddComponent(SpriteComponent("../data/textures/avatar.jpg"));
-    //to.GetComponent<SpriteComponent>()->SetPosition(400.0, 300.0);
+
     Map levelMap;
     levelMap.load("../data/textures/map3.png");
     window.setSize(levelMap.getTexture().getSize());
+    NavMesh mesh(window.getSize().x, window.getSize().y);
+
+    //building unit
+    TestUnitBuilder bld;
+    bld.reset();
+    bld.build();
+    bld.addNavigation(mesh);
+    Unit* testUnit = bld.getResult();
+    //
+    pl.selectedUnit = testUnit;
+
     while(window.isOpen())
     {
         sf::Event event;

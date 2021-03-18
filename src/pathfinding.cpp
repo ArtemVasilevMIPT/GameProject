@@ -7,7 +7,7 @@ NavMesh::NavMesh(size_t ox, size_t oy) {
         navMap[i].resize(oy);
     }
 }
-const std::vector<bool> NavMesh::operator[](size_t x) const {
+const std::vector<bool>& NavMesh::operator[](size_t x) const {
     return navMap[x];
 }
 void NavMesh::placeObstacle(std::pair<size_t, size_t> position, size_t size_x, size_t size_y) {
@@ -26,24 +26,24 @@ void NavMesh::removeObstacle(std::pair<size_t, size_t> position, size_t size_x, 
     }
 }
 
-std::queue<std::pair<size_t, size_t>> NavComponent::findPath(std::pair<float, float> start, std::pair<float, float> finish, float speed) {
-    size_t xst = floor(start.first);
-    size_t yst = floor(start.second);
-    size_t xend = floor(finish.first);
-    size_t yend = floor(finish.second);
+std::queue<std::pair<float, float>> NavComponent::findPath(std::pair<float, float> start, std::pair<float, float> finish, float speed) {
+    float xst = start.first;
+    float yst = start.second;
+    float xend = finish.first;
+    float yend = finish.second;
 
-    std::queue<std::pair<size_t, size_t>> path;
+    std::queue<std::pair<float, float>> path;
 
-    while(xst != xend && yst != yend) {
-        size_t len = sqrt((xend - xst) * (xend - xst) + (yend - yst) * (yend - yst));
-        if (len >= speed) {
+    while(abs(xst - xend) >= EPSILON && abs(yst - yend) >= EPSILON) {
+        float len = sqrt((xend - xst) * (xend - xst) + (yend - yst) * (yend - yst));
+        if (len <= speed) {
             path.push({xend, yend});
             break;
         }
-        size_t x_next = speed * (xst - xend) / len;
-        size_t y_next = speed * (yst - yend) / len;
+        float x_next = xst + ceil(speed * (xend - xst) / len);
+        float y_next = yst + ceil(speed * (yend - yst) / len);
 
-        if (!map[floor(x_next)][y_next]) {
+        if (!map[ceil(x_next)][ceil(y_next)]) {
             path.push({x_next, y_next});
             xst = x_next;
             yst = y_next;
@@ -66,8 +66,8 @@ std::queue<std::pair<size_t, size_t>> NavComponent::findPath(std::pair<float, fl
                 }
             }
 
-            while (map[x_next][y_next])
-        }*/
+            while (map[x_next][y_next])*/
+        }
     }
     return path;
 }
