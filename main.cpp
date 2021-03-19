@@ -72,6 +72,8 @@ int main()
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(currTime - lastIteration);
         if(duration.count() < 1000 / 60)//60 FPS
         {
+            duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::milliseconds(1000 / 60))
+                        - duration;
             std::this_thread::sleep_for(duration);
         }
         //
