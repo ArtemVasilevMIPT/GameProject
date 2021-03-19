@@ -11,12 +11,13 @@ int main()
     Scene sc;
     Object::currentScene = &sc;
     //For testing only
-    sf::RenderWindow window(sf::VideoMode(800, 600), "My Window");
-    Player pl(window);
-
     Map levelMap;
     levelMap.load("../data/textures/map3.png");
-    window.setSize(levelMap.getTexture().getSize());
+    //window.setSize(levelMap.getTexture().getSize());
+    sf::RenderWindow window(sf::VideoMode(levelMap.getTexture().getSize().x, levelMap.getTexture().getSize().y), "My Window");
+    Player pl(window);
+
+
     NavMesh mesh(window.getSize().x, window.getSize().y);
 
     //building unit
@@ -28,6 +29,7 @@ int main()
     //
     pl.selectedUnit = testUnit;
 
+    window.setView(window.getDefaultView());
     while(window.isOpen())
     {
         sf::Event event;
@@ -47,6 +49,7 @@ int main()
         //
         //Graphics pipeline
         window.clear();
+        window.setView(pl.GetComponent<CameraComponent>()->GetCamera().GetView());
         window.draw(levelMap.getSprite());
         for(auto& elem : sc.getObjects())
         {
@@ -56,7 +59,6 @@ int main()
                 window.draw(comp->GetSprite());
             }
         }
-        window.setView(pl.GetComponent<CameraComponent>()->GetCamera().GetView());
         window.display();
     }
     //

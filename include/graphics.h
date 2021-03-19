@@ -19,6 +19,7 @@ public:
         name = "SpriteComponent";
         spritePosition = std::make_pair<float, float>(0.0f, 0.0f);
     }
+    SpriteComponent(const SpriteComponent& other) = default;
     SpriteComponent(std::string texturePath);
     ~SpriteComponent() = default;
 
@@ -31,7 +32,7 @@ public:
     //Returns reference to an object's sprite
     sf::Sprite GetSprite() const; 
 
-    std::pair<float, float> GetPosition();
+    const std::pair<float, float>& GetPosition();
 };
 
 //Camera object
@@ -43,6 +44,7 @@ private:
 public:
     Camera() = delete;
     ~Camera() = default;
+    Camera(const Camera& other) = default;
     Camera(sf::RenderWindow& window);
 
 
@@ -85,6 +87,7 @@ public:
     {
         name = "CameraComponent";
     }
+    CameraComponent(const CameraComponent& other) = default;
     ~CameraComponent() = default;
 
     Camera& GetCamera()

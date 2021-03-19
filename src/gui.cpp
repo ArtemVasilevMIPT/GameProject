@@ -108,6 +108,20 @@ void Canvas::transform(sf::Transform &tr)
     }
 }
 
+Canvas::Canvas(const Canvas& other)
+{
+    topRightCorner = other.topRightCorner;
+    width = other.width;
+    height = other.height;
+    anchorPoint = other.anchorPoint;
+    state = other.state;
+
+    for(const auto& elem : other.ui)
+    {
+        //TODO implement
+    }
+}
+
 UI::~UI()
 {
     delete canvas;

@@ -8,6 +8,7 @@ class UIElement
 public:
     sf::Vector2f position;//Position of top left corner
     UIElement() = default;
+    UIElement(const UIElement& other) = default;
     virtual ~UIElement() = default;
 
     virtual void Draw(sf::RenderWindow& window){}
@@ -21,6 +22,7 @@ protected:
 public:
     Box() = default;
     Box(sf::Vector2f pos, sf::Vector2f size);
+    Box(const Box& other) = default;
     ~Box() override = default;
 
     void setColor(sf::Color c);
@@ -37,6 +39,7 @@ private:
     FuncType func;
 public:
     Button(sf::Vector2f pos, sf::Vector2f size,FuncType& func);
+    Button(const Button& other) = default;
     ~Button() override = default;
 
     void OnClick();
@@ -49,6 +52,7 @@ private:
 
 public:
     TextBox(sf::Vector2f pos, sf::Vector2f size, std::string str);
+    TextBox(const TextBox& other) = default;
     ~TextBox() override = default;
 
     void Draw(sf::RenderWindow& window) override;
@@ -68,6 +72,7 @@ public:
     sf::Vector2f anchorPoint;
 
     Canvas();
+    Canvas(const Canvas& other);
     ~Canvas();
 
     void drawUI(sf::RenderWindow& window);

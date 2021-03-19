@@ -39,6 +39,11 @@ void SpriteComponent::SetPosition(float x, float y)
     spritePosition.second = y;
 }
 
+const std::pair<float, float>& SpriteComponent::GetPosition()
+{
+    return spritePosition;
+}
+
 Camera::Camera(sf::RenderWindow &window)
 {
     view = window.getDefaultView();

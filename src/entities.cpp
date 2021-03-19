@@ -9,11 +9,6 @@ Entity::Entity(const Entity& other) : Object(other),
 Entity* Entity::clone() const {
     return new Entity(*this);
 }
-
-void Entity::setCommand(std::string& command) {
-
-}
-
 Unit::Unit(const Unit& other) : Entity(other), name(other.name), hp(other.hp),
     coordinates(other.coordinates), damage(other.damage), range(other.range), rate_of_fire(other.rate_of_fire),
     target(nullptr), time_next_shot(time(NULL) + rate_of_fire), speed(other.speed) {};
@@ -96,7 +91,7 @@ void Building::OnTick()
 HQ::HQ(const HQ& other) : Building(other) {};
 
 Entity* HQ::clone() const {
-    return new HQ(this);
+    return new HQ(*this);
 }
 
 void HQ::destroy() {
@@ -173,3 +168,23 @@ void Entity::setCommand(std::string &command)
 
 void Entity::destroy()
 {}
+
+Entity::Entity()
+{}
+
+
+PrototypeFactory::PrototypeFactory() {
+    prototypes["unit1"] = new Unit();
+    prototypes["HQ"] = new HQ();
+    prototypes["Factory"] = new Factory();
+}
+
+PrototypeFactory::~PrototypeFactory() {
+    delete prototypes["unit1"];
+    delete prototypes["HQ"];
+    delete prototypes["Factory"];
+}
+
+Entity* PrototypeFactory::clone(std::string name) {
+    return prototypes[name]->clone();
+}

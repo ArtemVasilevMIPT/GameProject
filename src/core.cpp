@@ -3,7 +3,9 @@
 //
 
 #include "core.h"
-#include "entities.h"
+#include "pathfinding.h"
+#include "graphics.h"
+#include "gui.h"
 
 Scene* Object::currentScene;
 
@@ -24,6 +26,34 @@ Object::Object()
 
 void Object::OnClick() {}
 void Object::OnHover() {}
+
+Object::Object(const Object &obj)
+{
+    for(auto& elem : obj.components)
+    {
+        std::string compName = elem.first;
+        if(compName == "SpriteComponent")
+        {
+            auto* newComp = new SpriteComponent(*(dynamic_cast<SpriteComponent*>(elem.second)));
+            this->AddComponent(*newComp);
+        }
+        else if(compName == "NavComponent")
+        {
+            auto* newComp = new NavComponent(*(dynamic_cast<NavComponent*>(elem.second)));
+            this->AddComponent(*newComp);
+        }
+        else if(compName == "CameraComponent")
+        {
+            auto* newComp = new CameraComponent(*(dynamic_cast<CameraComponent*>(elem.second)));
+            this->AddComponent(*newComp);
+        }
+        else if(compName == "UIComponent")
+        {
+            auto* newComp = new UIComponent(*(dynamic_cast<UIComponent*>(elem.second)));
+            this->AddComponent(*newComp);
+        }
+    }
+}
 
 Component::Component() = default;
 Component::~Component() = default;
@@ -70,20 +100,4 @@ sf::Sprite Map::getSprite()
     sf::Sprite sp;
     sp.setTexture(mapTexture);
     return mapSprite;
-}
-
-PrototypeFactory::PrototypeFactory() {
-    prototypes["unit1"] = new Unit();
-    prototypes["HQ"] = new HQ();
-    prototypes["Factory"] = new Factory();
-}
-
-PrototypeFactory::~PrototypeFactory() {
-    delete prototypes["unit1"];
-    delete prototypes["HQ"];
-    delete prototypes["Factory"];
-}
-
-Object* PrototypeFactory::clone(std::string name) {
-    return prototypes[name]->clone();
 }
