@@ -8,6 +8,37 @@
 
 class Object;
 
+class NavMesh {
+    std::vector<std::vector<bool>> navMap;
+public:
+
+    NavMesh(size_t ox, size_t oy);
+    NavMesh() = default;
+    ~NavMesh() = default;
+
+    const std::vector<bool>& operator[](size_t x) const;
+
+    void setSize(size_t x, size_t y);
+    void placeObstacle(std::pair<size_t, size_t> position, size_t size_x, size_t size_y);
+    void removeObstacle(std::pair<size_t, size_t> position, size_t size_x, size_t size_y);
+};
+
+class Map
+{
+private:
+    sf::Texture mapTexture;
+    sf::Sprite mapSprite;
+public:
+    Map() = default;
+    void load(std::string texturePath);
+    sf::Sprite getSprite();
+    NavMesh mesh;
+    sf::Texture& getTexture()
+    {
+        return mapTexture;
+    }
+};
+
 class Scene
 {
 private:
@@ -17,6 +48,7 @@ public:
     Scene(std::string path);
     ~Scene();
 
+    Map currMap;
     void load(std::string path);
     void addObject(Object* obj);
     void removeObject(std::list<Object*>::iterator& iter);
@@ -92,21 +124,7 @@ public:
     }
 };
 
-class Map
-{
-private:
-    sf::Texture mapTexture;
-    sf::Sprite mapSprite;
-public:
-    Map() = default;
-    void load(std::string texturePath);
-    sf::Sprite getSprite();
 
-    sf::Texture& getTexture()
-    {
-        return mapTexture;
-    }
-};
 
 class Builder
 {

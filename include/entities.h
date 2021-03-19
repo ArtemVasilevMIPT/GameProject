@@ -113,10 +113,10 @@ private:
     Unit* unit = nullptr;
 public:
     void build() override;
-    void addNavigation(NavMesh& mesh);
     void reset() override;
     Unit* getResult();
 };
+
 
 
 class PrototypeFactory {

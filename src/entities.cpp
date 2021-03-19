@@ -155,7 +155,8 @@ void Factory::OnTick()
 
 void TestUnitBuilder::build()
 {
-    unit->AddComponent(SpriteComponent("../data/textures/units/redUnit1.png"));
+    unit->AddComponent(SpriteComponent("../data/textures/units/redTank.png"));
+    unit->AddComponent(NavComponent(Object::currentScene->currMap.mesh));
     unit->name = "Test";
     unit->faction = "RED";
     //Optional
@@ -164,7 +165,7 @@ void TestUnitBuilder::build()
     //
     unit->currentCommand = "STANDBY";
     unit->hp = 50;
-    unit->speed = 3.0f;
+    unit->speed = 0.1f;
     unit->rate_of_fire = 1.0f;
     unit->range = 500.f;
     unit->damage = 10.f;
@@ -174,11 +175,6 @@ void TestUnitBuilder::build()
 void TestUnitBuilder::reset()
 {
     unit = new Unit;
-}
-
-void TestUnitBuilder::addNavigation(NavMesh& mesh)
-{
-    unit->AddComponent(NavComponent(mesh));
 }
 
 Unit *TestUnitBuilder::getResult()
