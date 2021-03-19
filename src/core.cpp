@@ -3,6 +3,7 @@
 //
 
 #include "core.h"
+#include "entities.h"
 
 Scene* Object::currentScene;
 
@@ -71,3 +72,18 @@ sf::Sprite Map::getSprite()
     return mapSprite;
 }
 
+PrototypeFactory::PrototypeFactory() {
+    prototypes["unit1"] = new Unit();
+    prototypes["HQ"] = new HQ();
+    prototypes["Factory"] = new Factory();
+}
+
+PrototypeFactory::~PrototypeFactory() {
+    delete prototypes["unit1"];
+    delete prototypes["HQ"];
+    delete prototypes["Factory"];
+}
+
+Object* PrototypeFactory::clone(std::string name) {
+    return prototypes[name]->clone();
+}
