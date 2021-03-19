@@ -78,7 +78,11 @@ void Player::OnTick()
             if(clickedObject != nullptr)
             {
                 //Command to shoot
-
+                if(dynamic_cast<Unit*>(selectedUnit) != nullptr)
+                {
+                    std::cerr << "Shooting" << std::endl;
+                    selectedUnit->shoot(dynamic_cast<Entity*>(clickedObject));
+                }
             }
             else
             {

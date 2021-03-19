@@ -4,14 +4,14 @@
 #include <iostream>
 
 Entity::Entity(const Entity& other) : Object(other), 
-    selected(other.selected), currentCommand(other.currentCommand) {};
+    selected(other.selected), hp(other.hp), coordinates(other.coordinates), currentCommand(other.currentCommand) {};
 
 Entity* Entity::clone() const {
     return new Entity(*this);
 }
-Unit::Unit(const Unit& other) : Entity(other), name(other.name), hp(other.hp),
-    coordinates(other.coordinates), damage(other.damage), range(other.range), rate_of_fire(other.rate_of_fire),
-    target(nullptr), time_next_shot(time(NULL) + rate_of_fire), speed(other.speed) {};
+Unit::Unit(const Unit& other) : Entity(other), name(other.name),
+     damage(other.damage), range(other.range), rate_of_fire(other.rate_of_fire),
+    target(nullptr), time_last_shot(std::chrono::steady_clock::now()), speed(other.speed) {};
 
 Entity* Unit::clone() const {
     return new Unit(*this);
@@ -25,12 +25,18 @@ void Unit::move(std::pair<float, float> destPoint)
     std::cerr << "Moving to coordinates: (" << destPoint.first << ", " << destPoint.second << ")" << std::endl;
 }
 
-void Unit::shoot(Entity* target) {
-
+void Unit::shoot(Entity* ent)
+{
+    if(ent->faction != faction)
+    {
+        currentCommand = "SHOOT";
+        target = ent;
+    }
 }
 
-void Unit::destroy() {
-
+void Unit::destroy()
+{
+    this->~Unit();
 }
 
 void Unit::OnTick()
@@ -54,7 +60,34 @@ void Unit::OnTick()
     }
     else if(currentCommand == "SHOOT")
     {
-
+        sf::Vector2u size = this->GetComponent<SpriteComponent>()->GetSprite().getTexture()->getSize();
+        std::pair<float, float> pos = std::make_pair(coordinates.first + size.x / 2,
+                                                     coordinates.second + size.y / 2);
+        sf::Vector2u targetSize = target->GetComponent<SpriteComponent>()->GetSprite().getTexture()->getSize();
+        std::pair<float, float> targetPos = std::make_pair(target->coordinates.first + targetSize.x / 2,
+                                                           target->coordinates.second + targetSize.y / 2);
+        float distance = sqrt((pos.first - targetPos.first) * (pos.first - targetPos.first) +
+                             (pos.second - targetPos.second) * (pos.second - targetPos.second));
+        if(distance <= range)
+        {
+            auto currTime = std::chrono::steady_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(currTime - time_last_shot).count();
+            if(duration >= rate_of_fire)
+            {
+                time_last_shot = currTime;
+                target->hp -= damage;
+                std::cerr << "Shooting at target" << std::endl;
+                if(target->hp <= 0)
+                {
+                    Object::destroyObject(target);
+                    currentCommand = "STANDBY";
+                }
+            }
+        }
+        else
+        {
+            currentCommand = "STANDBY";
+        }
     }
     else
     {
@@ -68,7 +101,7 @@ void Unit::OnStart()
 }
 
 Building::Building(const Building& other) : Entity(other),
-    name(other.name), hp(other.hp) {};
+    name(other.name){};
 
 Entity* Building::clone() const {
     return new Building(*this);
@@ -124,6 +157,7 @@ void TestUnitBuilder::build()
 {
     unit->AddComponent(SpriteComponent("../data/textures/units/redUnit1.png"));
     unit->name = "Test";
+    unit->faction = "RED";
     //Optional
     unit->coordinates.second = 40;
     unit->coordinates.first = 40;
@@ -131,6 +165,9 @@ void TestUnitBuilder::build()
     unit->currentCommand = "STANDBY";
     unit->hp = 50;
     unit->speed = 3.0f;
+    unit->rate_of_fire = 1.0f;
+    unit->range = 500.f;
+    unit->damage = 10.f;
 }
 
 

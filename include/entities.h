@@ -3,11 +3,14 @@
 #include <cmath>
 #include <queue>
 #include "pathfinding.h"
-#include <ctime>
+#include <chrono>
 
 class Entity : public Object {
 public:
     bool selected = false;
+    std::string faction;
+    std::pair<float, float> coordinates;
+    int hp;
     std::string currentCommand = "STANDBY"; //Stores current command
 
     //List of commands:
@@ -24,8 +27,9 @@ public:
     void OnStart() override;
     void OnTick() override;
     virtual void move(std::pair<float, float> destPoint);
-    virtual void shoot(Entity* target);
+    virtual void shoot(Entity* ent);
     virtual void destroy();
+
     void setCommand(std::string& command);
 
 };
@@ -34,13 +38,12 @@ class Unit : public Entity {
 public:
 
     std::string name;
-    int hp;
-    std::pair<float, float> coordinates;
+
     int damage;
     float range;
     float rate_of_fire;
     Entity* target;
-    size_t time_next_shot;
+    std::chrono::time_point<std::chrono::steady_clock> time_last_shot;
     float speed = 1.0f;
 
     std::queue<std::pair<float, float>> currentPath;
@@ -49,12 +52,12 @@ public:
     ~Unit() = default;
     Unit(const Unit& other);
 
-    virtual Entity* clone() const;
+    Entity* clone() const override;
 
     void OnStart() override;
     void OnTick() override;
     void move(std::pair<float, float> destPoint) override;
-    void shoot(Entity* target) override;
+    void shoot(Entity* ent) override;
 
     void destroy() override;
 };
@@ -63,7 +66,7 @@ class Building : public Entity {
 public:
     
     std::string name;
-    int hp;
+
 
     Building() = default;
     Building(const Building& other);
