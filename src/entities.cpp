@@ -165,7 +165,7 @@ void TestUnitBuilder::build()
     //
     unit->currentCommand = "STANDBY";
     unit->hp = 50;
-    unit->speed = 0.1f;
+    unit->speed = 1.f;
     unit->rate_of_fire = 1.0f;
     unit->range = 500.f;
     unit->damage = 10.f;
