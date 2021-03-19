@@ -3,23 +3,23 @@
 #include "gui.h"
 #include <iostream>
 
-Entity::Entity(const Entity* other) : Object(other), 
-    selected(other->selected), currentCommand(other->currentCommand) {};
+Entity::Entity(const Entity& other) : Object(other), 
+    selected(other.selected), currentCommand(other.currentCommand) {};
 
-Object* Entity::clone() const {
-    return new Entity(this);
+Entity* Entity::clone() const {
+    return new Entity(*this);
 }
 
 void Entity::setCommand(std::string& command) {
 
 }
 
-Unit::Unit(const Unit* other) : Entity(other), name(other->name), hp(other->hp),
-    coordinates(other->coordinates), damage(other->damage), range(other->range), rate_of_fire(other->rate_of_fire),
-    target(nullptr), time_next_shot(time(NULL) + rate_of_fire), speed(other->speed) {};
+Unit::Unit(const Unit& other) : Entity(other), name(other.name), hp(other.hp),
+    coordinates(other.coordinates), damage(other.damage), range(other.range), rate_of_fire(other.rate_of_fire),
+    target(nullptr), time_next_shot(time(NULL) + rate_of_fire), speed(other.speed) {};
 
-Object* Unit::clone() const {
-    return new Unit(this);
+Entity* Unit::clone() const {
+    return new Unit(*this);
 }
 
 
@@ -72,11 +72,11 @@ void Unit::OnStart()
 
 }
 
-Building::Building(const Building* other) : Entity(other),
-    name(other->name), hp(other->hp) {};
+Building::Building(const Building& other) : Entity(other),
+    name(other.name), hp(other.hp) {};
 
-Object* Building::clone() const {
-    return new Building(this);
+Entity* Building::clone() const {
+    return new Building(*this);
 }
 
 void Building::destroy() {
@@ -93,9 +93,9 @@ void Building::OnTick()
 
 }
 
-HQ::HQ(const HQ* other) : Building(other) {};
+HQ::HQ(const HQ& other) : Building(other) {};
 
-Object* HQ::clone() const {
+Entity* HQ::clone() const {
     return new HQ(this);
 }
 
@@ -103,11 +103,11 @@ void HQ::destroy() {
     
 }
 
-Factory::Factory(const Factory* other) : Building(other), 
-    units(other->units), buildQueue(other->buildQueue), rallyPoint(other->rallyPoint) {};
+Factory::Factory(const Factory& other) : Building(other), 
+    units(other.units), buildQueue(other.buildQueue), rallyPoint(other.rallyPoint) {};
 
-Object* Factory::clone() const {
-    return new Factory(this);
+Entity* Factory::clone() const {
+    return new Factory(*this);
 }
 
 void Factory::build() {
