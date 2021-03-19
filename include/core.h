@@ -44,7 +44,7 @@ private:
 
 public:
     Object();
-    Object(const Object& obj) = delete;
+    Object(const Object& obj);
     virtual ~Object();
 
     static Scene* currentScene;
@@ -113,14 +113,4 @@ class Builder
 public:
     virtual void build() = 0;
     virtual void reset() = 0;
-};
-
-class PrototypeFactory {
-private:
-    std::unordered_map<std::string, Object*> prototypes;
-public:
-    PrototypeFactory();
-    ~PrototypeFactory();
-
-    Object* clone(std::string name);
 };

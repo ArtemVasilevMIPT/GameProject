@@ -80,7 +80,7 @@ class HQ : public Building {
 public: 
     HQ() = default;
     ~HQ() = default;
-    HQ(const HQ* other);
+    HQ(const HQ& other);
     Entity* clone() const override;
 
     void destroy() override;
@@ -113,4 +113,15 @@ public:
     void addNavigation(NavMesh& mesh);
     void reset() override;
     Unit* getResult();
+};
+
+
+class PrototypeFactory {
+private:
+    std::unordered_map<std::string, Entity*> prototypes;
+public:
+    PrototypeFactory();
+    ~PrototypeFactory();
+
+    Entity* clone(std::string name);
 };

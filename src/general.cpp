@@ -119,7 +119,7 @@ void Player::OnTick()
         if(clickedObject != nullptr)
         {
             selectedUnit = dynamic_cast<Entity*>(clickedObject);
-            std::cerr << "Selected!" << std::endl;
+            std::cerr << "Selected! " << (selectedUnit != nullptr)<< std::endl;
         }
         else
         {
@@ -128,6 +128,7 @@ void Player::OnTick()
         //
         lmbPressed = false;
     }
+    /*
     //E key
     bool ePressed = false;
     while(sf::Keyboard::isKeyPressed(sf::Keyboard::E))
@@ -164,6 +165,6 @@ void Player::OnTick()
         }
         qPressed = false;
     }
-
+    */
 }
 
