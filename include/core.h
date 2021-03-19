@@ -114,3 +114,13 @@ public:
     virtual void build() = 0;
     virtual void reset() = 0;
 };
+
+class PrototypeFactory {
+private:
+    std::unordered_map<std::string, Object*> prototypes;
+public:
+    PrototypeFactory();
+    ~PrototypeFactory();
+
+    Object* clone(std::string name);
+};

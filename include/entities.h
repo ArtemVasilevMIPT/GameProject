@@ -5,8 +5,7 @@
 #include "pathfinding.h"
 #include <ctime>
 
-class Entity : public Object
-{
+class Entity : public Object {
 public:
     bool selected = false;
     std::string currentCommand = "STANDBY"; //Stores current command
@@ -16,8 +15,12 @@ public:
     //* SHOOT - unit shoots given target
     //* STANDBY - unit does nothing
 
-    Entity() = default;
+    Entity();
     ~Entity() override = default;
+
+    Entity(const Entity* other);
+
+    Object* clone() const override;
 
     void OnStart() override;
     void OnTick() override;
@@ -25,6 +28,7 @@ public:
     virtual void shoot(Entity* target);
     virtual void destroy();
     void setCommand(std::string& command);
+
 };
 
 class Unit : public Entity {
@@ -44,6 +48,9 @@ public:
 
     Unit() = default;
     ~Unit() = default;
+    Unit(const Unit* other);
+
+    Object* clone() const override;
 
     void OnStart() override;
     void OnTick() override;
@@ -60,7 +67,10 @@ public:
     int hp;
 
     Building() = default;
+    Building(const Building* other);
     ~Building() override = default;
+
+    Object* clone() const override;
 
     void OnStart() override;
     void OnTick() override;
@@ -71,6 +81,8 @@ class HQ : public Building {
 public: 
     HQ() = default;
     ~HQ() = default;
+    HQ(const HQ* other);
+    Object* clone() const override;
 
     void destroy() override;
 };
@@ -84,6 +96,8 @@ public:
 
     Factory() = default;
     ~Factory() = default;
+    Factory(const Factory* other);
+    Object* clone() const override;
 
     void OnStart() override;
     void OnTick() override;
