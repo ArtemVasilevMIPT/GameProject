@@ -2,31 +2,6 @@
 #include <cmath>
 #include <iostream>
 
-NavMesh::NavMesh(size_t ox, size_t oy) {
-    navMap.resize(ox);
-    for(size_t i= 0; i < ox; ++i) {
-        navMap[i].resize(oy);
-    }
-}
-const std::vector<bool>& NavMesh::operator[](size_t x) const {
-    return navMap[x];
-}
-void NavMesh::placeObstacle(std::pair<size_t, size_t> position, size_t size_x, size_t size_y) {
-    for(size_t i = position.first; i < position.first + size_x; ++i) {
-        for(size_t j = position.second; j < position.second + size_y; ++j) {
-            navMap[i][j] = true;
-        }
-    }
-}
-
-void NavMesh::removeObstacle(std::pair<size_t, size_t> position, size_t size_x, size_t size_y) {
-    for(size_t i = position.first; i < position.first + size_x; ++i) {
-        for(size_t j = position.second; j < position.second + size_y; ++j) {
-            navMap[i][j] = true;
-        }
-    }
-}
-
 std::queue<std::pair<float, float>> NavComponent::findPath(std::pair<float, float> start, std::pair<float, float> finish, float speed) {
     float xst = start.first;
     float yst = start.second;
