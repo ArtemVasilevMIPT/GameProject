@@ -55,6 +55,11 @@ Object::Object(const Object &obj)
     }
 }
 
+void Object::destroyObject(Object *obj)
+{
+    delete obj;
+}
+
 Component::Component() = default;
 Component::~Component() = default;
 

@@ -26,6 +26,14 @@ int main()
     bld.build();
     bld.addNavigation(mesh);
     Unit* testUnit = bld.getResult();
+
+    bld.reset();
+    bld.build();
+    bld.addNavigation(mesh);
+    Unit* testUnit2 = bld.getResult();
+    testUnit2->faction = "BLUE";
+    testUnit2->coordinates = std::make_pair(400.f, 400.f);
+    testUnit2->GetComponent<SpriteComponent>()->SetPosition(400.f, 400.f);
     //
     pl.selectedUnit = testUnit;
 

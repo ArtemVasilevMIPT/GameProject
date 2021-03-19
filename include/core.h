@@ -54,7 +54,7 @@ public:
     virtual void OnTick() = 0; //Called every tick
     virtual void OnClick(); //Called when clicked
     virtual void OnHover(); //Called when mouse hovers over the object
-
+    static void destroyObject(Object* obj); //Destroys given object
     //Method that adds specific component to the base class
     template<typename T>
     void AddComponent(T component)
