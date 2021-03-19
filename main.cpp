@@ -1,4 +1,6 @@
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include "core.h"
 #include "graphics.h"
 #include "general.h"
@@ -12,11 +14,8 @@ int main()
     Object::currentScene = &sc;
     //For testing only
     sc.currMap.load("../data/textures/map3.png");
-    //window.setSize(levelMap.getTexture().getSize());
     sf::RenderWindow window(sf::VideoMode(sc.currMap.getTexture().getSize().x, sc.currMap.getTexture().getSize().y), "My Window");
     Player pl(window);
-
-
     sc.currMap.mesh.setSize(window.getSize().x, window.getSize().y);
 
     //building unit
@@ -35,6 +34,9 @@ int main()
     pl.selectedUnit = testUnit;
 
     window.setView(window.getDefaultView());
+    //FPS lock
+    auto lastIteration = std::chrono::steady_clock::now();
+    //
     while(window.isOpen())
     {
         sf::Event event;
@@ -65,6 +67,14 @@ int main()
             }
         }
         window.display();
+        //FPS lock
+        auto currTime = std::chrono::steady_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(currTime - lastIteration);
+        if(duration.count() < 1000 / 60)//60 FPS
+        {
+            std::this_thread::sleep_for(duration);
+        }
+        //
     }
     //
     return 0;
