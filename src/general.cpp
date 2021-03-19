@@ -38,17 +38,25 @@ void Player::OnTick()
     {
         rmbPressed = true;
     }
+    bool lmbPressed = false;
+    while(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        lmbPressed = true;
+    }
+    std::pair<float, float> dest = std::make_pair(cursorPosition.x, cursorPosition.y);
+    if(lmbPressed || rmbPressed)
+    {
+        float scale = static_cast<float>(viewSize.x) / static_cast<float>(windowSize.x);
+        dest.first = viewCenter.x + (dest.first - static_cast<float>(windowSize.x) / 2.0f) * scale;
+        dest.second = viewCenter.y + (dest.second - static_cast<float>(windowSize.y) / 2.0f) * scale;
+        dest.first = std::max(dest.first, 0.0f);
+        dest.second = std::max(dest.second, 0.0f);
+        std::cerr << "Clicked on " << dest.first << " " << dest.second <<  std::endl;
+    }
     if(rmbPressed)
     {
         if(selectedUnit != nullptr)
         {
-            //Retrieving click position
-            std::pair<float, float> dest = std::make_pair(cursorPosition.x, cursorPosition.y);
-            float scale = static_cast<float>(viewSize.x) / static_cast<float>(windowSize.x);
-            dest.first = viewCenter.x + (dest.first - windowSize.x / 2) * scale;
-            dest.second = viewCenter.y + (dest.second - windowSize.y / 2) * scale;
-            dest.first = std::max(dest.first, 0.0f);
-            dest.second = std::max(dest.second, 0.0f);
             //Checking for context actions
             //Looking for object
             Object* clickedObject = nullptr;
@@ -57,10 +65,11 @@ void Player::OnTick()
                 SpriteComponent *comp = obj->GetComponent<SpriteComponent>();
                 if (comp != nullptr)
                 {
-                    sf::FloatRect boundingBox = comp->GetSprite().getLocalBounds();
+                    sf::FloatRect boundingBox = comp->GetSprite().getGlobalBounds();
                     if (boundingBox.contains(cursorPosition.x, cursorPosition.y))
                     {
                         clickedObject = obj;
+
                         break;
                     }
                 }
@@ -82,21 +91,10 @@ void Player::OnTick()
         rmbPressed = false;
     }
     //Left Mouse Button
-    bool lmbPressed = false;
-    while(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-    {
-        lmbPressed = true;
-    }
+
     if(lmbPressed)
     {
         //Selecting/Deselecting units
-        //Retrieving click position
-        std::pair<float, float> dest = std::make_pair(cursorPosition.x, cursorPosition.y);
-        float scale = static_cast<float>(viewSize.x) / static_cast<float>(windowSize.x);
-        dest.first = viewCenter.x + (dest.first - windowSize.x / 2) * scale;
-        dest.second = viewCenter.y + (dest.second - windowSize.y / 2) * scale;
-        dest.first = std::max(dest.first, 0.0f);
-        dest.second = std::max(dest.second, 0.0f);
         //Looking for object
         Object* clickedObject = nullptr;
         for(auto& obj : Object::currentScene->getObjects())
@@ -104,7 +102,7 @@ void Player::OnTick()
             SpriteComponent *comp = obj->GetComponent<SpriteComponent>();
             if (comp != nullptr)
             {
-                sf::FloatRect boundingBox = comp->GetSprite().getLocalBounds();
+                sf::FloatRect boundingBox = comp->GetSprite().getGlobalBounds();
                 if (boundingBox.contains(cursorPosition.x, cursorPosition.y))
                 {
                     clickedObject = obj;
@@ -128,6 +126,7 @@ void Player::OnTick()
             selectedUnit = nullptr;
         }
         //
+        lmbPressed = false;
     }
     //E key
     bool ePressed = false;
@@ -165,5 +164,6 @@ void Player::OnTick()
         }
         qPressed = false;
     }
+
 }
 
