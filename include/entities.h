@@ -18,9 +18,8 @@ public:
     Entity();
     ~Entity() override = default;
 
-    Entity(const Entity* other);
-
-    Object* clone() const override;
+    Entity(const Entity& other);
+    virtual Entity* clone() const;
 
     void OnStart() override;
     void OnTick() override;
@@ -48,9 +47,9 @@ public:
 
     Unit() = default;
     ~Unit() = default;
-    Unit(const Unit* other);
+    Unit(const Unit& other);
 
-    Object* clone() const override;
+    virtual Entity* clone() const;
 
     void OnStart() override;
     void OnTick() override;
@@ -67,10 +66,10 @@ public:
     int hp;
 
     Building() = default;
-    Building(const Building* other);
+    Building(const Building& other);
     ~Building() override = default;
 
-    Object* clone() const override;
+    Entity* clone() const override;
 
     void OnStart() override;
     void OnTick() override;
@@ -82,7 +81,7 @@ public:
     HQ() = default;
     ~HQ() = default;
     HQ(const HQ* other);
-    Object* clone() const override;
+    Entity* clone() const override;
 
     void destroy() override;
 };
@@ -96,8 +95,8 @@ public:
 
     Factory() = default;
     ~Factory() = default;
-    Factory(const Factory* other);
-    Object* clone() const override;
+    Factory(const Factory& other);
+    Entity* clone() const override;
 
     void OnStart() override;
     void OnTick() override;
