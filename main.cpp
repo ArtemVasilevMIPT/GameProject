@@ -19,15 +19,11 @@ int main()
     sc.currMap.mesh.setSize(window.getSize().x, window.getSize().y);
 
     //building unit
-    TestUnitBuilder bld;
-    bld.reset();
-    bld.build();
+    RedUnitBuilder bld;
     Unit* testUnit = bld.getResult();
 
-    bld.reset();
-    bld.build();
-    Unit* testUnit2 = bld.getResult();
-    testUnit2->faction = "BLUE";
+    BlueUnitBuilder bbld;
+    Unit* testUnit2 = bbld.getResult();
     testUnit2->coordinates = std::make_pair(400.f, 400.f);
     testUnit2->GetComponent<SpriteComponent>()->SetPosition(400.f, 400.f);
     //

@@ -62,6 +62,7 @@ public:
     void destroy() override;
 };
 
+
 class Building : public Entity {
 public:
     
@@ -79,6 +80,7 @@ public:
     void destroy() override;
 };
 
+
 class HQ : public Building {
 public: 
     HQ() = default;
@@ -88,6 +90,7 @@ public:
 
     void destroy() override;
 };
+
 
 class Factory : public Building {
 public:
@@ -107,17 +110,59 @@ public:
     void destroy() override;
 };
 
-class TestUnitBuilder : Builder
-{
+
+//Builders
+
+class RedUnitBuilder : Builder {
 private:
     Unit* unit = nullptr;
 public:
     void build() override;
-    void reset() override;
     Unit* getResult();
 };
 
+class BlueUnitBuilder : Builder {
+private:
+    Unit* unit = nullptr;
+public:
+    void build() override;
+    Unit* getResult();
+};
 
+class RedHQBuilder : Builder {
+private:
+    HQ* hq = nullptr;
+public:
+    void build() override;
+    HQ* getResult();
+};
+
+class BlueHQBuilder : Builder {
+private:
+    HQ* hq = nullptr;
+public:
+    void build() override;
+    HQ* getResult();
+};
+
+class RedFactoryBuilder : Builder {
+private:
+    Factory* factory = nullptr;
+public:
+    void build() override;
+    Factory* getResult();
+};
+
+class BlueFactoryBuilder : Builder {
+private:
+    Factory* factory = nullptr;
+public:
+    void build() override;
+    Factory* getResult();
+};
+
+
+//PrototypeFactory
 
 class PrototypeFactory {
 private:

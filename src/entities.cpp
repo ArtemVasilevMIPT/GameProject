@@ -3,12 +3,42 @@
 #include "gui.h"
 #include <iostream>
 
+
+//Entity
+
+Entity::Entity()
+{}
+
 Entity::Entity(const Entity& other) : Object(other), 
     selected(other.selected), hp(other.hp), coordinates(other.coordinates), currentCommand(other.currentCommand) {};
 
 Entity* Entity::clone() const {
     return new Entity(*this);
 }
+
+void Entity::OnStart() 
+{}
+
+void Entity::OnTick()
+{}
+
+void Entity::shoot(Entity *target)
+{}
+
+void Entity::move(std::pair<float, float> destPoint)
+{}
+
+void Entity::setCommand(std::string &command)
+{
+    currentCommand = command;
+}
+
+void Entity::destroy()
+{}
+
+
+//Unit
+
 Unit::Unit(const Unit& other) : Entity(other), name(other.name),
      damage(other.damage), range(other.range), rate_of_fire(other.rate_of_fire),
     target(nullptr), time_last_shot(std::chrono::steady_clock::now()), speed(other.speed) {};
@@ -100,6 +130,9 @@ void Unit::OnStart()
 
 }
 
+
+//Building
+
 Building::Building(const Building& other) : Entity(other),
     name(other.name){};
 
@@ -121,6 +154,9 @@ void Building::OnTick()
 
 }
 
+
+//HQ
+
 HQ::HQ(const HQ& other) : Building(other) {};
 
 Entity* HQ::clone() const {
@@ -130,6 +166,9 @@ Entity* HQ::clone() const {
 void HQ::destroy() {
     
 }
+
+
+//Factory
 
 Factory::Factory(const Factory& other) : Building(other), 
     units(other.units), buildQueue(other.buildQueue), rallyPoint(other.rallyPoint) {};
@@ -153,11 +192,13 @@ void Factory::OnTick()
 {
 }
 
-void TestUnitBuilder::build()
-{
+
+//Builders
+
+void RedUnitBuilder::build() {
     unit->AddComponent(SpriteComponent("../data/textures/units/redTank.png"));
     unit->AddComponent(NavComponent(Object::currentScene->currMap.mesh));
-    unit->name = "Test";
+    unit->name = "RedUnit";
     unit->faction = "RED";
     //Optional
     unit->coordinates.second = 40;
@@ -172,50 +213,106 @@ void TestUnitBuilder::build()
 }
 
 
-void TestUnitBuilder::reset()
-{
+Unit* RedUnitBuilder::getResult() {
     unit = new Unit;
-}
-
-Unit *TestUnitBuilder::getResult()
-{
+    build();
     return unit;
 }
 
-void Entity::OnStart()
-{}
-
-void Entity::OnTick()
-{}
-
-void Entity::shoot(Entity *target)
-{}
-
-void Entity::move(std::pair<float, float> destPoint)
-{}
-
-void Entity::setCommand(std::string &command)
-{
-    currentCommand = command;
+void BlueUnitBuilder::build() {
+    unit->AddComponent(SpriteComponent("../data/textures/units/blueTank.png"));
+    unit->AddComponent(NavComponent(Object::currentScene->currMap.mesh));
+    unit->name = "RedUnit";
+    unit->faction = "BLUE";
+    //Optional
+    unit->coordinates.second = 40;
+    unit->coordinates.first = 40;
+    //
+    unit->currentCommand = "STANDBY";
+    unit->hp = 50;
+    unit->speed = 1.f;
+    unit->rate_of_fire = 1.0f;
+    unit->range = 500.f;
+    unit->damage = 10.f;
 }
 
-void Entity::destroy()
-{}
 
-Entity::Entity()
-{}
+Unit* BlueUnitBuilder::getResult() {
+    unit = new Unit;
+    build();
+    return unit;
+} 
 
+void RedHQBuilder::build() {
+    
+}
+
+
+HQ* RedHQBuilder::getResult() {
+    hq = new HQ;
+    build();
+    return hq;
+}
+
+void BlueHQBuilder::build() {
+    
+}
+
+
+HQ* BlueHQBuilder::getResult() {
+    hq = new HQ;
+    build();
+    return hq;
+}
+
+void RedFactoryBuilder::build() {
+    
+}
+
+
+Factory* RedFactoryBuilder::getResult() {
+    factory = new Factory;
+    build();
+    return factory;
+}
+
+void BlueFactoryBuilder::build() {
+    
+}
+
+
+Factory* BlueFactoryBuilder::getResult() {
+    factory = new Factory;
+    build();
+    return factory;
+}
+
+//PrototypeFactory
 
 PrototypeFactory::PrototypeFactory() {
-    prototypes["unit1"] = new Unit();
-    prototypes["HQ"] = new HQ();
-    prototypes["Factory"] = new Factory();
+    RedUnitBuilder redUnitBuilder;
+    prototypes["RedUnit"] = redUnitBuilder.getResult();
+    BlueUnitBuilder blueUnitBuilder;
+    prototypes["BlueUnit"] = blueUnitBuilder.getResult();
+    
+    RedHQBuilder redHQBuilder;
+    prototypes["RedHQ"] = redHQBuilder.getResult();
+    BlueHQBuilder blueHQBuilder;
+    prototypes["BlueHQ"] = blueHQBuilder.getResult();
+
+    RedFactoryBuilder redFactoryBuilder;
+    prototypes["RedFactory"] = redFactoryBuilder.getResult();
+    BlueFactoryBuilder blueFactoryBuilder;
+    prototypes["BlueFactory"] = blueFactoryBuilder.getResult();
 }
 
 PrototypeFactory::~PrototypeFactory() {
-    delete prototypes["unit1"];
-    delete prototypes["HQ"];
-    delete prototypes["Factory"];
+    delete prototypes["RedUnit"];
+    delete prototypes["BlueUnit"];
+    delete prototypes["RedHQ"];
+    delete prototypes["BlueHQ"];
+    delete prototypes["RedFactory"];
+    delete prototypes["BlueFactory"];
 }
 
 Entity* PrototypeFactory::clone(std::string name) {
