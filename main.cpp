@@ -17,7 +17,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(sc.currMap.getTexture().getSize().x, sc.currMap.getTexture().getSize().y), "My Window");
     Player pl(window);
     sc.currMap.mesh.setSize(window.getSize().x, window.getSize().y);
-
+    sc.window = &window;
     //building unit
     RedUnitBuilder bld;
     Unit* testUnit = bld.getResult();
@@ -44,20 +44,23 @@ int main()
 
             }
         }
+
         //Actions loop
         for(auto& elem : sc.getObjects())
         {
             elem->OnTick();
         }
         //
+
         //Graphics pipeline
         window.clear();
         window.setView(pl.GetComponent<CameraComponent>()->GetCamera().GetView());
         window.draw(sc.currMap.getSprite());
+
         for(auto& elem : sc.getObjects())
         {
             SpriteComponent* comp = elem->GetComponent<SpriteComponent>();
-            if(comp != nullptr)
+            if(comp != nullptr && comp->enabled)
             {
                 window.draw(comp->GetSprite());
             }

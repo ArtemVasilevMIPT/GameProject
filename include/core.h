@@ -49,6 +49,7 @@ public:
     ~Scene();
 
     Map currMap;
+    sf::RenderWindow* window = nullptr;
     void load(std::string path);
     void addObject(Object* obj);
     void removeObject(std::list<Object*>::iterator& iter);
@@ -62,7 +63,7 @@ class Component
 {
 public :
     std::string name = "Component";
-
+    bool enabled = true;//Enables/Disables component
     Component();
 
     virtual ~Component();

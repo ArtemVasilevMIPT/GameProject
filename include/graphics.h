@@ -12,12 +12,16 @@ class SpriteComponent : public Component
 {
 private:
     sf::Texture texture;
-public:
     std::pair<float, float> spritePosition;
+    float spriteRotation = 0.0f;
+    std::pair<float, float> spriteSize;
+public:
+
     SpriteComponent()
     {
         name = "SpriteComponent";
         spritePosition = std::make_pair<float, float>(0.0f, 0.0f);
+        spriteSize = std::make_pair<float, float>(32.f, 32.f);
     }
     SpriteComponent(const SpriteComponent& other) = default;
     SpriteComponent(std::string texturePath);
@@ -31,8 +35,16 @@ public:
     const sf::Texture& GetTexture() const;
     //Returns reference to an object's sprite
     sf::Sprite GetSprite() const; 
-
+    //Returns position of a sprite
     const std::pair<float, float>& GetPosition();
+    //Rotates sprite clockwise
+    void SetRotation(float angle);
+    //Returns rotation of a sprite
+    float GetRotation() const;
+    //Sets size of a sprite
+    void SetSize(float width, float height);
+    //Returns sprite size
+    std::pair<float, float> GetSize() const;
 };
 
 //Camera object
