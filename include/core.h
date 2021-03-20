@@ -126,9 +126,7 @@ public:
 
 
 
-class Builder
-{
+class Builder {
 public:
     virtual void build() = 0;
-    virtual void reset() = 0;
 };
