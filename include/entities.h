@@ -5,6 +5,21 @@
 #include "pathfinding.h"
 #include <chrono>
 
+class Projectile : public Object
+{
+private:
+    int count = 0;
+    int lifeTime = 11;
+public:
+    Projectile();
+    void set(float x0, float y0, float x, float y);
+    ~Projectile() override;
+
+    bool draw = false;
+    void OnTick() override;
+    void OnStart() override;
+};
+
 class Entity : public Object {
 public:
     bool selected = false;
@@ -35,6 +50,9 @@ public:
 };
 
 class Unit : public Entity {
+private:
+    int counter = 0;
+    int projLifeTime = 5;
 public:
 
     std::string name;
@@ -45,6 +63,7 @@ public:
     Entity* target;
     std::chrono::time_point<std::chrono::steady_clock> time_last_shot;
     float speed = 1.0f;
+    //Projectile currentProj;
 
     std::queue<std::pair<float, float>> currentPath;
 

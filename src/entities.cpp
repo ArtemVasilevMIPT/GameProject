@@ -82,7 +82,16 @@ void Unit::OnTick()
         {
             std::pair<float, float> newPos = currentPath.front();
             //std::cerr << newPos.first << " " << newPos.second << std::endl;
-            this->GetComponent<SpriteComponent>()->SetPosition(newPos.first, newPos.second);
+            auto* comp = this->GetComponent<SpriteComponent>();
+            comp->SetPosition(newPos.first, newPos.second);//Moving
+            float len = sqrt((newPos.first - coordinates.first) * (newPos.first - coordinates.first) +
+                            (newPos.second - coordinates.second) * (newPos.second - coordinates.second));
+            float angle = asinf((newPos.second - coordinates.second) / len);
+            if(newPos.first < coordinates.first)
+            {
+                angle = 180.f - angle;
+            }
+            comp->SetRotation(-angle);
             coordinates.first = newPos.first;
             coordinates.second = newPos.second;
             currentPath.pop();
@@ -107,6 +116,7 @@ void Unit::OnTick()
                 time_last_shot = currTime;
                 target->hp -= damage;
                 std::cerr << "Shooting at target" << std::endl;
+                //currentProj.set(pos.first, pos.second, targetPos.first, targetPos.second);
                 if(target->hp <= 0)
                 {
                     Object::destroyObject(target);
@@ -317,4 +327,48 @@ PrototypeFactory::~PrototypeFactory() {
 
 Entity* PrototypeFactory::clone(std::string name) {
     return prototypes[name]->clone();
+}
+
+Projectile::Projectile()
+{
+    draw = false;
+    this->AddComponent(SpriteComponent("../data/textures/laser.png"));
+    this->GetComponent<SpriteComponent>()->enabled = false;
+}
+
+void Projectile::OnTick()
+{
+    if(count < lifeTime)
+    {
+        ++count;
+    }
+    else
+    {
+        if(draw)
+        {
+            std::cerr << "Disabled drawing" << std::endl;
+            this->GetComponent<SpriteComponent>()->enabled = false;
+            draw = false;
+        }
+    }
+}
+
+void Projectile::OnStart()
+{
+}
+
+Projectile::~Projectile()
+{}
+
+void Projectile::set(float x0, float y0, float x, float y)
+{
+    float len = sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0));
+    float angle = asin((y - y0) / len);
+    auto* comp = this->GetComponent<SpriteComponent>();
+    comp->SetSize(len, 3);
+    comp->SetPosition(x0, y0);
+    comp->SetRotation(angle);
+    comp->enabled = true;
+    draw = true;
+    count = 0;
 }
