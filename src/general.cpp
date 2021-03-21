@@ -63,32 +63,40 @@ void Player::OnTick()
             for(auto& obj : Object::currentScene->getObjects())
             {
                 SpriteComponent *comp = obj->GetComponent<SpriteComponent>();
-                if (comp != nullptr)
+                if (comp != nullptr && comp->enabled)
                 {
                     sf::FloatRect boundingBox = comp->GetSprite().getGlobalBounds();
                     if (boundingBox.contains(cursorPosition.x, cursorPosition.y))
                     {
                         clickedObject = obj;
-
                         break;
                     }
                 }
             }
             //
-            if(clickedObject != nullptr)
+            if(dynamic_cast<Unit*>(selectedUnit) != nullptr)
             {
-                //Command to shoot
-                if(dynamic_cast<Unit*>(selectedUnit) != nullptr)
+                if (clickedObject != nullptr)
                 {
-                    std::cerr << "Shooting" << std::endl;
-                    selectedUnit->shoot(dynamic_cast<Entity*>(clickedObject));
+                    //Command to shoot
+                    if (dynamic_cast<Unit *>(selectedUnit) != nullptr)
+                    {
+                        std::cerr << "Shooting" << std::endl;
+                        selectedUnit->shoot(dynamic_cast<Entity *>(clickedObject));
+                    }
+                } else
+                {
+                    //Command to move
+                    std::cerr << "Commanded movement to: (" << dest.first << ", " << dest.second << ")" << std::endl;
+                    selectedUnit->move(dest);
                 }
-            }
-            else
+            } else if(dynamic_cast<Factory*>(selectedUnit) != nullptr)
             {
-                //Command to move
-                std::cerr << "Commanded movement to: (" << dest.first << ", " << dest.second << ")" << std::endl;
-                selectedUnit->move(dest);
+                Factory* selected = dynamic_cast<Factory*>(selectedUnit);
+                if(clickedObject == nullptr)
+                {
+                    selected->setRallyPoint(dest.first, dest.second);
+                }
             }
             //
         }
@@ -104,7 +112,7 @@ void Player::OnTick()
         for(auto& obj : Object::currentScene->getObjects())
         {
             SpriteComponent *comp = obj->GetComponent<SpriteComponent>();
-            if (comp != nullptr)
+            if (comp != nullptr && comp->enabled)
             {
                 sf::FloatRect boundingBox = comp->GetSprite().getGlobalBounds();
                 if (boundingBox.contains(cursorPosition.x, cursorPosition.y))
@@ -132,6 +140,30 @@ void Player::OnTick()
         //
         lmbPressed = false;
     }
+
+    //For testing only
+    //Will be moved to ui
+    bool fPressed = false;
+    while(sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+    {
+        fPressed = true;
+    }
+    if(fPressed)
+    {
+        auto* selected = dynamic_cast<Factory*>(selectedUnit);
+        if(selected != nullptr)
+        {
+            if (selected->faction == "RED")
+            {
+                selected->build("RedUnit");
+            } else
+            {
+                selected->build("BlueUnit");
+            }
+        }
+    }
+    //
+
     /*
     //E key
     bool ePressed = false;

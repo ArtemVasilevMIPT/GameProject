@@ -6,7 +6,20 @@
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
 
+
 class Object;
+class Entity;
+//PrototypeFactory
+
+class PrototypeFactory {
+private:
+    std::unordered_map<std::string, Entity*> prototypes;
+public:
+    PrototypeFactory();
+    ~PrototypeFactory();
+
+    Entity* clone(std::string name);
+};
 
 class NavMesh {
     std::vector<std::vector<bool>> navMap;
@@ -44,12 +57,14 @@ class Scene
 private:
     std::list<Object*> objects;
 public:
-    Scene() = default;
-    Scene(std::string path);
+    Scene();
+    explicit Scene(std::string path);
     ~Scene();
 
     Map currMap;
     sf::RenderWindow* window = nullptr;
+    PrototypeFactory* prFactory = nullptr;
+
     void load(std::string path);
     void addObject(Object* obj);
     void removeObject(std::list<Object*>::iterator& iter);
@@ -131,3 +146,36 @@ class Builder {
 public:
     virtual void build() = 0;
 };
+
+
+class Entity : public Object {
+public:
+    bool selected = false;
+    std::string faction;
+    std::pair<float, float> coordinates;
+    int hp;
+    std::string currentCommand = "STANDBY"; //Stores current command
+
+    //List of commands:
+    //* MOVE - unit is moving to its destination
+    //* SHOOT - unit shoots given target
+    //* BUILD - factory builds unit
+    //* SET_RALLY_POINT - factory sets new rally point
+    //* STANDBY - unit does nothing
+
+    Entity();
+    ~Entity() override = default;
+
+    Entity(const Entity& other);
+    virtual Entity* clone() const;
+
+    void OnStart() override;
+    void OnTick() override;
+    virtual void move(std::pair<float, float> destPoint);
+    virtual void shoot(Entity* ent);
+    virtual void destroy();
+
+    void setCommand(std::string& command);
+
+};
+

@@ -20,34 +20,6 @@ public:
     void OnStart() override;
 };
 
-class Entity : public Object {
-public:
-    bool selected = false;
-    std::string faction;
-    std::pair<float, float> coordinates;
-    int hp;
-    std::string currentCommand = "STANDBY"; //Stores current command
-
-    //List of commands:
-    //* MOVE - unit is moving to its destination
-    //* SHOOT - unit shoots given target
-    //* STANDBY - unit does nothing
-
-    Entity();
-    ~Entity() override = default;
-
-    Entity(const Entity& other);
-    virtual Entity* clone() const;
-
-    void OnStart() override;
-    void OnTick() override;
-    virtual void move(std::pair<float, float> destPoint);
-    virtual void shoot(Entity* ent);
-    virtual void destroy();
-
-    void setCommand(std::string& command);
-
-};
 
 class Unit : public Entity {
 private:
@@ -77,7 +49,7 @@ public:
     void OnTick() override;
     void move(std::pair<float, float> destPoint) override;
     void shoot(Entity* ent) override;
-
+    void setPosition(float x, float y);
     void destroy() override;
 };
 
@@ -115,6 +87,8 @@ class Factory : public Building {
 public:
 
     std::unordered_map<std::string, Unit> units;
+    std::chrono::time_point<std::chrono::steady_clock> buildStart;
+    std::string currentUnit = "";
     std::queue<std::string> buildQueue;
     std::pair<float, float> rallyPoint;
 
@@ -125,8 +99,9 @@ public:
 
     void OnStart() override;
     void OnTick() override;
-    void build();
+    void build(std::string unit);
     void destroy() override;
+    void setRallyPoint(float x, float y);
 };
 
 
@@ -181,14 +156,3 @@ public:
 };
 
 
-//PrototypeFactory
-
-class PrototypeFactory {
-private:
-    std::unordered_map<std::string, Entity*> prototypes;
-public:
-    PrototypeFactory();
-    ~PrototypeFactory();
-
-    Entity* clone(std::string name);
-};

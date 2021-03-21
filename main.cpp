@@ -11,21 +11,29 @@
 int main()
 {
     Scene sc;
-    Object::currentScene = &sc;
+    //Object::currentScene = &sc;
     //For testing only
     sc.currMap.load("../data/textures/map3.png");
     sf::RenderWindow window(sf::VideoMode(sc.currMap.getTexture().getSize().x, sc.currMap.getTexture().getSize().y), "My Window");
     Player pl(window);
     sc.currMap.mesh.setSize(window.getSize().x, window.getSize().y);
     sc.window = &window;
+    PrototypeFactory prFac;
+    sc.prFactory = &prFac;
     //building unit
     RedUnitBuilder bld;
     Unit* testUnit = bld.getResult();
 
     BlueUnitBuilder bbld;
     Unit* testUnit2 = bbld.getResult();
-    testUnit2->coordinates = std::make_pair(400.f, 400.f);
-    testUnit2->GetComponent<SpriteComponent>()->SetPosition(400.f, 400.f);
+    testUnit2->coordinates = std::make_pair(100.f, 100.f);
+    testUnit2->GetComponent<SpriteComponent>()->SetPosition(100.f, 100.f);
+    //
+    //Building factory
+    RedFactoryBuilder rfb;
+    Factory* testFactory = rfb.getResult();
+    testFactory->coordinates = std::make_pair(400.f, 400.f);
+    testFactory->GetComponent<SpriteComponent>()->SetPosition(400.f, 400.f);
     //
     pl.selectedUnit = testUnit;
 
