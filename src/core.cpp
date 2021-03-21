@@ -6,6 +6,7 @@
 #include "pathfinding.h"
 #include "graphics.h"
 #include "gui.h"
+#include "entities.h"
 
 Scene* Object::currentScene;
 
@@ -53,6 +54,7 @@ Object::Object(const Object &obj)
             this->AddComponent(*newComp);
         }
     }
+    currentScene->addObject(this);
 }
 
 void Object::destroyObject(Object *obj)
@@ -92,6 +94,11 @@ void Scene::addObject(Object *obj)
 void Scene::removeObject(std::list<Object *>::iterator &iter)
 {
     objects.erase(iter);
+}
+
+Scene::Scene()
+{
+    Object::currentScene = this;
 }
 
 void Map::load(std::string texturePath)
@@ -140,4 +147,74 @@ void NavMesh::setSize(size_t x, size_t y)
     {
         elem.resize(y);
     }
+}
+
+//Entity
+
+Entity::Entity()
+{}
+
+Entity::Entity(const Entity& other) : Object(other),
+                                      selected(other.selected), hp(other.hp), coordinates(other.coordinates), currentCommand(other.currentCommand) {};
+
+Entity* Entity::clone() const {
+    return new Entity(*this);
+}
+
+void Entity::OnStart()
+{}
+
+void Entity::OnTick()
+{}
+
+void Entity::shoot(Entity *target)
+{}
+
+void Entity::move(std::pair<float, float> destPoint)
+{}
+
+void Entity::setCommand(std::string &command)
+{
+    currentCommand = command;
+}
+
+void Entity::destroy()
+{}
+
+//PrototypeFactory
+
+PrototypeFactory::PrototypeFactory() {
+    RedUnitBuilder redUnitBuilder;
+    prototypes["RedUnit"] = redUnitBuilder.getResult();
+    BlueUnitBuilder blueUnitBuilder;
+    prototypes["BlueUnit"] = blueUnitBuilder.getResult();
+
+    RedHQBuilder redHQBuilder;
+    prototypes["RedHQ"] = redHQBuilder.getResult();
+    BlueHQBuilder blueHQBuilder;
+    prototypes["BlueHQ"] = blueHQBuilder.getResult();
+
+    RedFactoryBuilder redFactoryBuilder;
+    prototypes["RedFactory"] = redFactoryBuilder.getResult();
+    BlueFactoryBuilder blueFactoryBuilder;
+    prototypes["BlueFactory"] = blueFactoryBuilder.getResult();
+    for(auto& elem : prototypes)
+    {
+        auto* comp = elem.second->GetComponent<SpriteComponent>();
+        if(comp != nullptr)
+            comp->enabled = false;
+    }
+}
+
+PrototypeFactory::~PrototypeFactory() {
+    delete prototypes["RedUnit"];
+    delete prototypes["BlueUnit"];
+    delete prototypes["RedHQ"];
+    delete prototypes["BlueHQ"];
+    delete prototypes["RedFactory"];
+    delete prototypes["BlueFactory"];
+}
+
+Entity* PrototypeFactory::clone(std::string name) {
+    return prototypes[name]->clone();
 }
