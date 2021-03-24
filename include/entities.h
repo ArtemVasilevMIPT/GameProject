@@ -5,7 +5,29 @@
 #include "pathfinding.h"
 #include <ctime>
 
-class Unit : public Object {
+class Entity : public Object
+{
+public:
+    bool selected = false;
+    std::string currentCommand = "STANDBY"; //Stores current command
+
+    //List of commands:
+    //* MOVE - unit is moving to its destination
+    //* SHOOT - unit shoots given target
+    //* STANDBY - unit does nothing
+
+    Entity() = default;
+    ~Entity() override = default;
+
+    void OnStart() override;
+    void OnTick() override;
+    virtual void move(std::pair<float, float> destPoint);
+    virtual void shoot(Entity* target);
+    virtual void destroy();
+    void setCommand(std::string& command);
+};
+
+class Unit : public Entity {
 public:
 
     std::string name;
@@ -14,15 +36,9 @@ public:
     int damage;
     float range;
     float rate_of_fire;
-    Object* target;
+    Entity* target;
     size_t time_next_shot;
     float speed = 1.0f;
-    std::string currentCommand = "STANDBY"; //Stores current command
-
-    //List of commands:
-    //* MOVE - unit is moving to its destination
-    //* SHOOT - unit shoots given target
-    //* STANDBY - unit does nothing
 
     std::queue<std::pair<float, float>> currentPath;
 
@@ -31,24 +47,24 @@ public:
 
     void OnStart() override;
     void OnTick() override;
-    void move(std::pair<float, float> destPoint);
-    void shoot(Object* target);
-    void setCommand(std::string& command);
-    void destroy();    
+    void move(std::pair<float, float> destPoint) override;
+    void shoot(Entity* target) override;
+
+    void destroy() override;
 };
 
-class Building : public Object {
+class Building : public Entity {
 public:
     
     std::string name;
     int hp;
 
     Building() = default;
-    ~Building() = default;
+    ~Building() override = default;
 
     void OnStart() override;
     void OnTick() override;
-    virtual void destroy();
+    void destroy() override;
 };
 
 class HQ : public Building {
@@ -78,7 +94,7 @@ public:
 class TestUnitBuilder : Builder
 {
 private:
-    Unit* unit;
+    Unit* unit = nullptr;
 public:
     void build() override;
     void addNavigation(NavMesh& mesh);

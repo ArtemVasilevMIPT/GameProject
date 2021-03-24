@@ -44,7 +44,7 @@ std::queue<std::pair<float, float>> NavComponent::findPath(std::pair<float, floa
         float x_next = xst + speed * (xend - xst) / len;
         float y_next = yst + speed * (yend - yst) / len;
 
-        if (!map[floor(x_next)][floor(y_next)]) {
+        if (!map[ceil(x_next)][ceil(y_next)]) {
             path.push({x_next, y_next});
             xst = x_next;
             yst = y_next;
@@ -71,16 +71,22 @@ std::queue<std::pair<float, float>> NavComponent::findPath(std::pair<float, floa
             while (map[x_next][y_next])*/
         }
     }
-<<<<<<< HEAD
-    std::cout << "start: " << start.first << ' ' << start.second << '\n';
-    std::cout << "finish: " << finish.first << ' ' << finish.second << '\n';
+
+    //std::cout << "start: " << start.first << ' ' << start.second << '\n';
+    //std::cout << "finish: " << finish.first << ' ' << finish.second << '\n';
+    /*
     std::queue<std::pair<float, float>> path1 = path;
     for (int i = 0; i < path.size(); ++i) {
-        std::cout << path1.front().first << ' ' << path1.front().second << '\n';
+        //std::cout << path1.front().first << ' ' << path1.front().second << '\n';
         path1.pop();
     }
+<<<<<<< HEAD
 =======
 
 >>>>>>> Fixed pathfinding and added zoom ability
+=======
+     */
+
+>>>>>>> Minor chages
     return path;
 }
