@@ -6,7 +6,6 @@ SpriteComponent::SpriteComponent(std::string texturePath)
     name = "SpriteComponent";
     if(!texture.loadFromFile(texturePath))
     {
-        std::cerr << "Failed to load texture from path: " << texturePath << std::endl;
         return;
     }
     spriteSize = std::make_pair(texture.getSize().x, texture.getSize().y);

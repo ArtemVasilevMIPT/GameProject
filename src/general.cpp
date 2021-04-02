@@ -51,7 +51,6 @@ void Player::OnTick()
         dest.second = viewCenter.y + (dest.second - static_cast<float>(windowSize.y) / 2.0f) * scale;
         dest.first = std::max(dest.first, 0.0f);
         dest.second = std::max(dest.second, 0.0f);
-        std::cerr << "Clicked on " << dest.first << " " << dest.second <<  std::endl;
     }
     if(rmbPressed)
     {
@@ -81,13 +80,11 @@ void Player::OnTick()
                     //Command to shoot
                     if (dynamic_cast<Unit *>(selectedUnit) != nullptr)
                     {
-                        std::cerr << "Shooting" << std::endl;
                         selectedUnit->shoot(dynamic_cast<Entity *>(clickedObject));
                     }
                 } else
                 {
                     //Command to move
-                    std::cerr << "Commanded movement to: (" << dest.first << ", " << dest.second << ")" << std::endl;
                     selectedUnit->move(dest);
                 }
             } else if(dynamic_cast<Factory*>(selectedUnit) != nullptr)
@@ -126,12 +123,10 @@ void Player::OnTick()
         if(selectedUnit != nullptr)
         {
             selectedUnit->selected = false;
-            std::cerr << "Deselected!" << std::endl;
         }
         if(clickedObject != nullptr)
         {
             selectedUnit = dynamic_cast<Entity*>(clickedObject);
-            std::cerr << "Selected! " << (selectedUnit != nullptr)<< std::endl;
         }
         else
         {
@@ -141,7 +136,6 @@ void Player::OnTick()
         lmbPressed = false;
     }
 
-    //For testing only
     //Will be moved to ui
     bool fPressed = false;
     while(sf::Keyboard::isKeyPressed(sf::Keyboard::F))
@@ -162,45 +156,5 @@ void Player::OnTick()
             }
         }
     }
-    //
-
-    /*
-    //E key
-    bool ePressed = false;
-    while(sf::Keyboard::isKeyPressed(sf::Keyboard::E))
-    {
-        ePressed = true;
-    }
-    if(ePressed)
-    {
-        this->GetComponent<CameraComponent>()->zoomCamera(1.6f);
-        if(window->getView().getSize().x > windowSize.x)
-        {
-            sf::View v;
-            v.setSize(windowSize.x, windowSize.y);
-            v.setCenter(viewCenter);
-            this->GetComponent<CameraComponent>()->GetCamera().SetView(v);
-        }
-        ePressed = false;
-    }
-    //Q key
-    bool qPressed = false;
-    while(sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-    {
-        qPressed = true;
-    }
-    if(qPressed)
-    {
-        this->GetComponent<CameraComponent>()->zoomCamera(0.0625f);
-        if(window->getView().getSize().x < 100)
-        {
-            sf::View v;
-            v.setSize(viewSize.x, viewSize.y);
-            v.setCenter(viewCenter);
-            this->GetComponent<CameraComponent>()->GetCamera().SetView(v);
-        }
-        qPressed = false;
-    }
-    */
 }
 

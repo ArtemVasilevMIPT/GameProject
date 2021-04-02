@@ -21,7 +21,6 @@ void Unit::move(std::pair<float, float> destPoint)
 {
     currentCommand = "MOVE";
     currentPath = this->GetComponent<NavComponent>()->findPath(coordinates, destPoint, speed);
-    std::cerr << "Moving to coordinates: (" << destPoint.first << ", " << destPoint.second << ")" << std::endl;
 }
 
 void Unit::shoot(Entity* ent)
@@ -45,12 +44,10 @@ void Unit::OnTick()
         if(currentPath.empty())
         {
             currentCommand = "STANDBY";
-            std::cerr << "Stopped on coordinates: (" << coordinates.first << ", " << coordinates.second << ")\n";
         }
         else
         {
             std::pair<float, float> newPos = currentPath.front();
-            //std::cerr << newPos.first << " " << newPos.second << std::endl;
             auto* comp = this->GetComponent<SpriteComponent>();
             comp->SetPosition(newPos.first, newPos.second);//Moving
             float len = sqrt((newPos.first - coordinates.first) * (newPos.first - coordinates.first) +
@@ -84,8 +81,6 @@ void Unit::OnTick()
             {
                 time_last_shot = currTime;
                 target->hp -= damage;
-                std::cerr << "Shooting at target" << std::endl;
-                //currentProj.set(pos.first, pos.second, targetPos.first, targetPos.second);
                 if(target->hp <= 0)
                 {
                     Object::destroyObject(target);
@@ -349,7 +344,6 @@ void Projectile::OnTick()
     {
         if(draw)
         {
-            std::cerr << "Disabled drawing" << std::endl;
             this->GetComponent<SpriteComponent>()->enabled = false;
             draw = false;
         }

@@ -15,13 +15,14 @@ std::queue<std::pair<float, float>> NavComponent::findPath(std::pair<float, floa
             path.push({xend, yend});
             break;
         }
-        float x_next = xst + ceil(speed * (xend - xst) / len);
-        float y_next = yst + ceil(speed * (yend - yst) / len);
+        float x_next = xst + speed * (xend - xst) / len;
+        float y_next = yst + speed * (yend - yst) / len;
 
         if (!map[ceil(x_next)][ceil(y_next)]) {
             path.push({x_next, y_next});
             xst = x_next;
             yst = y_next;
+
             continue;
         } else {
             break;
