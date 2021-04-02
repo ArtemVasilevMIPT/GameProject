@@ -59,7 +59,6 @@ int main()
             elem->OnTick();
         }
         //
-
         //Graphics pipeline
         window.clear();
         window.setView(pl.GetComponent<CameraComponent>()->GetCamera().GetView());

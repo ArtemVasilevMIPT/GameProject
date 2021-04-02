@@ -25,23 +25,6 @@ std::queue<std::pair<float, float>> NavComponent::findPath(std::pair<float, floa
             continue;
         } else {
             break;
-            /*int hflag = 0, vflag = 0;
-            if (map[x_next][y_next + 1] || map[x_next][y_next - 1]) {
-                if (xend >= xst) {
-                    hflag = 1;
-                } else {
-                    hflag = -1;
-                }
-            }
-            if (map[x_next + 1][y_next] || map[x_next - 1][y_next]) {
-                if (yend >= yst) {
-                    vflag = 1;
-                } else {
-                    vflag = -1;
-                }
-            }
-
-            while (map[x_next][y_next])*/
         }
     }
 
