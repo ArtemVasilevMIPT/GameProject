@@ -1,5 +1,6 @@
-#include "../include/graphics.h"
+#include "graphics.h"
 #include <iostream>
+#include "cfgreader.h"
 
 SpriteComponent::SpriteComponent(std::string texturePath)
 {
@@ -66,4 +67,13 @@ std::pair<float, float> SpriteComponent::GetSize() const
 Camera::Camera(sf::RenderWindow &window)
 {
     view = window.getDefaultView();
+}
+
+CameraComponent::CameraComponent(sf::RenderWindow &window)
+: cam(window)
+{
+    name = "CameraComponent";
+    cfgReader reader("../config/camera.cfg");
+    flySpeed = std::stof(reader.getVal("flySpeed"));
+    zoomSpeed = std::stof(reader.getVal("zoomSpeed"));
 }

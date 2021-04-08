@@ -147,6 +147,7 @@ public:
     virtual void build() = 0;
 };
 
+enum Command {STANDBY, MOVE, SHOOT, BUILD, SET_RALLY_POINT};
 
 class Entity : public Object {
 public:
@@ -154,7 +155,7 @@ public:
     std::string faction;
     std::pair<float, float> coordinates;
     int hp;
-    std::string currentCommand = "STANDBY"; //Stores current command
+    enum Command currentCommand = STANDBY; //Stores current command
 
     //List of commands:
     //* MOVE - unit is moving to its destination
@@ -175,7 +176,6 @@ public:
     virtual void shoot(Entity* ent);
     virtual void destroy();
 
-    void setCommand(std::string& command);
-
+    void setCommand(enum Command command);
 };
 

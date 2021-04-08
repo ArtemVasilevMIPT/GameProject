@@ -88,17 +88,11 @@ class CameraComponent : public Component
 {
 private:
     Camera cam;
-    float flySpeed = 0.9f;
-    float zoomSpeed = 0.9f;
+    float flySpeed = 0;
+    float zoomSpeed = 0;
 
 public:
-    CameraComponent(sf::RenderWindow& window, float fSpeed = 0.9f, float zSpeed = 0.9f)
-    : cam(window),
-      flySpeed(fSpeed),
-      zoomSpeed(zSpeed)
-    {
-        name = "CameraComponent";
-    }
+    CameraComponent(sf::RenderWindow& window);
     CameraComponent(const CameraComponent& other) = default;
     ~CameraComponent() = default;
 

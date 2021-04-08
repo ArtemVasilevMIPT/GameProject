@@ -99,8 +99,7 @@ public:
 
     void OnStart() override;
     void OnTick() override;
-    void build(std::string unit);
-    void destroy() override;
+    void build(const std::string& unit);
     void setRallyPoint(float x, float y);
 };
 

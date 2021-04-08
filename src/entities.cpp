@@ -19,7 +19,7 @@ Entity* Unit::clone() const {
 
 void Unit::move(std::pair<float, float> destPoint)
 {
-    currentCommand = "MOVE";
+    currentCommand = MOVE;
     currentPath = this->GetComponent<NavComponent>()->findPath(coordinates, destPoint, speed);
 }
 
@@ -27,7 +27,7 @@ void Unit::shoot(Entity* ent)
 {
     if(ent->faction != faction)
     {
-        currentCommand = "SHOOT";
+        currentCommand = SHOOT;
         target = ent;
     }
 }
@@ -39,11 +39,11 @@ void Unit::destroy()
 
 void Unit::OnTick()
 {
-    if(currentCommand == "MOVE")
+    if(currentCommand == MOVE)
     {
         if(currentPath.empty())
         {
-            currentCommand = "STANDBY";
+            currentCommand = STANDBY;
         }
         else
         {
@@ -63,7 +63,7 @@ void Unit::OnTick()
             currentPath.pop();
         }
     }
-    else if(currentCommand == "SHOOT")
+    else if(currentCommand == SHOOT)
     {
         sf::Vector2u size = this->GetComponent<SpriteComponent>()->GetSprite().getTexture()->getSize();
         std::pair<float, float> pos = std::make_pair(coordinates.first + size.x / 2,
@@ -84,13 +84,13 @@ void Unit::OnTick()
                 if(target->hp <= 0)
                 {
                     Object::destroyObject(target);
-                    currentCommand = "STANDBY";
+                    currentCommand = STANDBY;
                 }
             }
         }
         else
         {
-            currentCommand = "STANDBY";
+            currentCommand = STANDBY;
         }
     }
     else
@@ -164,13 +164,10 @@ Entity* Factory::clone() const {
     return factory;
 }
 
-void Factory::build(std::string unit)
+void Factory::build(const std::string& unit)
 {
     buildQueue.push(unit);
-    currentCommand = "BUILD";
-}
-void Factory::destroy() {
-
+    currentCommand = BUILD;
 }
 
 void Factory::OnStart()
@@ -179,7 +176,7 @@ void Factory::OnStart()
 
 void Factory::OnTick()
 {
-    if(currentCommand == "BUILD")
+    if(currentCommand == BUILD)
     {
         if(currentUnit.empty())
         {
@@ -199,7 +196,7 @@ void Factory::OnTick()
                 buildQueue.pop();
                 if(buildQueue.empty())
                 {
-                    currentCommand = "STANDBY";
+                    currentCommand = STANDBY;
                     currentUnit = "";
                 }
                 else
@@ -230,7 +227,7 @@ void RedUnitBuilder::build() {
     unit->coordinates.second = 40;
     unit->coordinates.first = 40;
     //
-    unit->currentCommand = "STANDBY";
+    unit->currentCommand = STANDBY;
     unit->hp = 50;
     unit->speed = 1.f;
     unit->rate_of_fire = 1.0f;
@@ -254,7 +251,7 @@ void BlueUnitBuilder::build() {
     unit->coordinates.second = 40;
     unit->coordinates.first = 40;
     //
-    unit->currentCommand = "STANDBY";
+    unit->currentCommand = STANDBY;
     unit->hp = 50;
     unit->speed = 1.f;
     unit->rate_of_fire = 1.0f;

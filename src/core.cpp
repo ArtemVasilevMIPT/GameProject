@@ -173,7 +173,7 @@ void Entity::shoot(Entity *target)
 void Entity::move(std::pair<float, float> destPoint)
 {}
 
-void Entity::setCommand(std::string &command)
+void Entity::setCommand(enum Command command)
 {
     currentCommand = command;
 }
@@ -207,12 +207,10 @@ PrototypeFactory::PrototypeFactory() {
 }
 
 PrototypeFactory::~PrototypeFactory() {
-    delete prototypes["RedUnit"];
-    delete prototypes["BlueUnit"];
-    delete prototypes["RedHQ"];
-    delete prototypes["BlueHQ"];
-    delete prototypes["RedFactory"];
-    delete prototypes["BlueFactory"];
+    for(auto& elem : prototypes)
+    {
+        delete elem.second;
+    }
 }
 
 Entity* PrototypeFactory::clone(std::string name) {
