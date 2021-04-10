@@ -112,6 +112,7 @@ void Unit::setPosition(float x, float y)
 }
 
 
+
 //Building
 
 Building::Building(const Building& other) : Entity(other),
@@ -138,6 +139,7 @@ void Building::OnTick()
 }
 
 
+
 //HQ
 
 HQ::HQ(const HQ& other) : Building(other) {};
@@ -151,7 +153,6 @@ Entity* HQ::clone() const {
 void HQ::destroy() {
     
 }
-
 
 //Factory
 
@@ -215,12 +216,11 @@ void Factory::setRallyPoint(float x, float y)
     rallyPoint.second = y;
 }
 
-
 //Builders
 
 void RedUnitBuilder::build() {
     unit->AddComponent(SpriteComponent("../data/textures/units/redTank.png"));
-    unit->AddComponent(NavComponent(Object::currentScene->currMap.mesh));
+    unit->AddComponent(NavComponent());
     unit->name = "RedUnit";
     unit->faction = "RED";
     //Optional
@@ -244,7 +244,7 @@ Unit* RedUnitBuilder::getResult() {
 
 void BlueUnitBuilder::build() {
     unit->AddComponent(SpriteComponent("../data/textures/units/blueTank.png"));
-    unit->AddComponent(NavComponent(Object::currentScene->currMap.mesh));
+    unit->AddComponent(NavComponent());
     unit->name = "BlueUnit";
     unit->faction = "BLUE";
     //Optional

@@ -20,6 +20,7 @@ int main()
     sc.window = &window;
     PrototypeFactory prFac;
     sc.prFactory = &prFac;
+    NavComponent::map = sc.currMap.mesh;
     //building unit
     RedUnitBuilder bld;
     Unit* testUnit = bld.getResult();
@@ -84,6 +85,9 @@ int main()
         }
         //
     }
+
+    //sc.save("../data/scenes/start_scene.xml");
+
     //
     return 0;
 }

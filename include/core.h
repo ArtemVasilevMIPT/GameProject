@@ -5,7 +5,13 @@
 #include <list>
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
-
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/serialization/list.hpp>
+#include <boost/serialization/string.hpp>
+#include <boost/serialization/unordered_map.hpp>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/vector.hpp>
 
 class Object;
 class Entity;
@@ -14,15 +20,32 @@ class Entity;
 class PrototypeFactory {
 private:
     std::unordered_map<std::string, Entity*> prototypes;
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive& ar, const unsigned int version)
+    {
+        {
+            ar & prototypes;
+        }
+    }
+    //
 public:
     PrototypeFactory();
     ~PrototypeFactory();
-
     Entity* clone(std::string name);
 };
 
 class NavMesh {
     std::vector<std::vector<bool>> navMap;
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        ar & navMap;
+    }
+    //
 public:
 
     NavMesh(size_t ox, size_t oy);
@@ -39,6 +62,14 @@ public:
 class Map
 {
 private:
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        //TODO implement
+    }
+    //
     sf::Texture mapTexture;
     sf::Sprite mapSprite;
 public:
@@ -55,17 +86,27 @@ public:
 class Scene
 {
 private:
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        ar & objects;
+    }
+    //
     std::list<Object*> objects;
 public:
     Scene();
-    explicit Scene(std::string path);
+    explicit Scene(const std::string& path);
     ~Scene();
 
+    //Serialization stuff
+    void load(const std::string& path);
+    void save(const std::string& path);
+    //
     Map currMap;
     sf::RenderWindow* window = nullptr;
     PrototypeFactory* prFactory = nullptr;
-
-    void load(std::string path);
     void addObject(Object* obj);
     void removeObject(std::list<Object*>::iterator& iter);
     const std::list<Object*>& getObjects()
@@ -76,6 +117,16 @@ public:
 
 class Component
 {
+private:
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        ar & name;
+        ar & enabled;
+    }
+    //
 public :
     std::string name = "Component";
     bool enabled = true;//Enables/Disables component
@@ -89,7 +140,14 @@ class Object
 
 private:
     std::unordered_map<std::string,Component*> components; //Storage of all object's components
-
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        ar & components;
+    }
+    //
 public:
     Object();
     Object(const Object& obj);
@@ -150,6 +208,20 @@ public:
 enum Command {STANDBY, MOVE, SHOOT, BUILD, SET_RALLY_POINT};
 
 class Entity : public Object {
+private:
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        ar & boost::serialization::base_object<Object>(*this);
+        ar & selected;
+        ar & faction;
+        ar & coordinates;
+        ar & hp;
+        ar & currentCommand;
+    }
+    //
 public:
     bool selected = false;
     std::string faction;
@@ -178,4 +250,3 @@ public:
 
     void setCommand(enum Command command);
 };
-

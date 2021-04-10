@@ -11,6 +11,17 @@
 class SpriteComponent : public Component
 {
 private:
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        boost::serialization::base_object<Component>(*this);
+        ar & spritePosition;
+        ar & spriteRotation;
+        ar & spriteSize;
+    }
+    //
     sf::Texture texture;
     std::pair<float, float> spritePosition;
     float spriteRotation = 0.0f;
@@ -52,9 +63,16 @@ class Camera
 {
 private:
     sf::View view;
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
 
+    }
+    //
 public:
-    Camera() = delete;
+    Camera() = default;
     ~Camera() = default;
     Camera(const Camera& other) = default;
     Camera(sf::RenderWindow& window);
@@ -90,8 +108,21 @@ private:
     Camera cam;
     float flySpeed = 0;
     float zoomSpeed = 0;
-
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        boost::serialization::base_object<Component>(*this);
+        ar & flySpeed;
+        ar & zoomSpeed;
+    }
+//
 public:
+    CameraComponent()
+    {
+        name = "CameraComponent";
+    }
     CameraComponent(sf::RenderWindow& window);
     CameraComponent(const CameraComponent& other) = default;
     ~CameraComponent() = default;

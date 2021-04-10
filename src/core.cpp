@@ -1,12 +1,13 @@
 //
 // Created by marcille on 06.03.2021.
 //
-
+#include <fstream>
 #include "core.h"
 #include "pathfinding.h"
 #include "graphics.h"
 #include "gui.h"
 #include "entities.h"
+#include "general.h"
 
 Scene* Object::currentScene;
 
@@ -62,8 +63,12 @@ void Object::destroyObject(Object *obj)
     delete obj;
 }
 
+
+
 Component::Component() = default;
 Component::~Component() = default;
+
+
 
 Scene::~Scene()
 {
@@ -73,14 +78,43 @@ Scene::~Scene()
     }
 }
 
-Scene::Scene(std::string path)
+Scene::Scene(const std::string& path)
 {
 
 }
 
-void Scene::load(std::string path)
+void Scene::save(const std::string &path)
 {
+    std::ofstream output(path);
+    boost::archive::text_oarchive oa{output};
+    oa.register_type<Entity>();
+    oa.register_type<SpriteComponent>();
+    oa.register_type<CameraComponent>();
+    oa.register_type<NavComponent>();
+    oa.register_type<Unit>();
+    oa.register_type<Building>();
+    oa.register_type<Factory>();
+    oa.register_type<HQ>();
+    oa.register_type<Player>();
+    oa << *this;
+    output.close();
+}
 
+void Scene::load(const std::string& path)
+{
+    std::ifstream input(path);
+    boost::archive::text_iarchive ia{input};
+    ia.register_type<Entity>();
+    ia.register_type<SpriteComponent>();
+    ia.register_type<CameraComponent>();
+    ia.register_type<NavComponent>();
+    ia.register_type<Unit>();
+    ia.register_type<Building>();
+    ia.register_type<Factory>();
+    ia.register_type<HQ>();
+    ia.register_type<Player>();
+    ia >> *this;
+    input.close();
 }
 
 void Scene::addObject(Object *obj)
@@ -113,7 +147,6 @@ sf::Sprite Map::getSprite()
     sp.setTexture(mapTexture);
     return mapSprite;
 }
-
 
 NavMesh::NavMesh(size_t ox, size_t oy) {
     navMap.resize(ox);

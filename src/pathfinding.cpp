@@ -1,6 +1,8 @@
 #include "pathfinding.h"
 #include <cmath>
 
+NavMesh NavComponent::map;
+
 std::queue<std::pair<float, float>> NavComponent::findPath(std::pair<float, float> start, std::pair<float, float> finish, float speed) {
     float xst = start.first;
     float yst = start.second;
@@ -31,3 +33,4 @@ std::queue<std::pair<float, float>> NavComponent::findPath(std::pair<float, floa
 
     return path;
 }
+

@@ -64,10 +64,12 @@ std::pair<float, float> SpriteComponent::GetSize() const
     return spriteSize;
 }
 
+
 Camera::Camera(sf::RenderWindow &window)
 {
     view = window.getDefaultView();
 }
+
 
 CameraComponent::CameraComponent(sf::RenderWindow &window)
 : cam(window)
@@ -77,3 +79,4 @@ CameraComponent::CameraComponent(sf::RenderWindow &window)
     flySpeed = std::stof(reader.getVal("flySpeed"));
     zoomSpeed = std::stof(reader.getVal("zoomSpeed"));
 }
+

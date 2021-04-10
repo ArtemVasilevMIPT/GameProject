@@ -25,6 +25,19 @@ class Unit : public Entity {
 private:
     int counter = 0;
     int projLifeTime = 5;
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        boost::serialization::base_object<Entity>(*this);
+        ar & name;
+        ar & damage;
+        ar & range;
+        ar & rate_of_fire;
+        ar & speed;
+    }
+    //
 public:
 
     std::string name;
@@ -54,7 +67,18 @@ public:
 };
 
 
-class Building : public Entity {
+class Building : public Entity
+{
+private:
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        boost::serialization::base_object<Entity>(*this);
+        ar & name;
+    }
+    //
 public:
     
     std::string name;
@@ -72,7 +96,17 @@ public:
 };
 
 
-class HQ : public Building {
+class HQ : public Building
+{
+private:
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        boost::serialization::base_object<Building>(*this);
+    }
+    //
 public: 
     HQ() = default;
     ~HQ() = default;
@@ -83,7 +117,19 @@ public:
 };
 
 
-class Factory : public Building {
+class Factory : public Building
+{
+private:
+    //Serialization stuff
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        boost::serialization::base_object<Building>(*this);
+        ar & units;
+        ar & rallyPoint;
+    }
+    //
 public:
 
     std::unordered_map<std::string, Unit> units;
@@ -153,5 +199,3 @@ public:
     void build() override;
     Factory* getResult();
 };
-
-
